@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Летальность Бытия</title>
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section id="gamePanel" class="game-panel" aria-label="Летальность Бытия">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">платформер про цену импульса</p>
+            <h1>Летальность Бытия</h1>
+          </div>
+          <div class="stats">
+            <span id="deathCount">Смерти: 0</span>
+            <span id="timer">00:00</span>
+          </div>
+        </div>
+
+        <div id="screen" class="screen">
+          <canvas id="game" width="960" height="576"></canvas>
+          <div id="winActions" class="win-actions" hidden>
+            <button id="restart" class="restart" type="button">Заново</button>
+            <button id="nextLevel" class="restart next-level" type="button">Следующий</button>
+          </div>
+          <div id="mainMenu" class="overlay menu-overlay">
+            <div class="menu-window">
+              <div id="menuHome" class="menu-view">
+                <div class="menu-hero">
+                  <p class="menu-kicker">ретро-платформер</p>
+                  <h2>Летальность Бытия</h2>
+                  <p class="menu-tagline">Выбирай уровень, сохраняй свои маршруты и настраивай физику прямо в редакторе.</p>
+                </div>
+                <div class="menu-home-grid">
+                  <button id="playButton" class="menu-tile primary" type="button">
+                    <span>Играть</span>
+                    <strong>Встроенные уровни</strong>
+                  </button>
+                  <button id="customLevelsButton" class="menu-tile" type="button">
+                    <span>Свои уровни</span>
+                    <strong id="customLevelStatus">src/levels/custom</strong>
+                  </button>
+                  <button id="editorButton" class="menu-tile" type="button">
+                    <span>Редактор</span>
+                    <strong>Собрать уровень</strong>
+                  </button>
+                  <button id="gameFullscreenButton" class="menu-tile" type="button">
+                    <span>Экран</span>
+                    <strong>Развернуть игру</strong>
+                  </button>
+                </div>
+              </div>
+              <div id="menuLevels" class="menu-view" hidden>
+                <div class="menu-list-head">
+                  <button id="levelListBackButton" class="editor-mode-button" type="button">Назад</button>
+                  <div>
+                    <p class="menu-kicker" id="levelListKicker">выбор уровня</p>
+                    <h2 id="levelListTitle">Уровни</h2>
+                  </div>
+                  <button id="levelListPlayButton" class="menu-action" type="button">Запустить</button>
+                </div>
+                <div id="levelSelect" class="level-select" aria-label="Выбор уровня"></div>
+              </div>
+            </div>
+          </div>
+          <div id="pauseMenu" class="overlay pause-overlay" hidden>
+            <div class="menu-window pause-window">
+              <p class="menu-kicker">пауза</p>
+              <h2>Легенда</h2>
+              <div class="controls-grid">
+                <span>W</span><p>прыжок</p>
+                <span>A / D</span><p>движение</p>
+                <span>S</span><p>быстрый спуск</p>
+                <span>R</span><p>рестарт</p>
+                <span>J</span><p>лимит отрисовки</p>
+                <span>K</span><p>диагностика</p>
+                <span>Esc</span><p>пауза</p>
+              </div>
+              <label class="pause-toggle">
+                <input id="hitboxToggle" type="checkbox" />
+                <span>Хитбоксы</span>
+              </label>
+              <div class="win-pause-section">
+                <p class="win-pause-title">Уровень пройден</p>
+                <p class="win-pause-hotkeys"><b>Enter</b> заново · <b>Space</b> следующий уровень</p>
+                <div class="pause-actions">
+                  <button id="restartWinPauseButton" class="menu-action" type="button">Заново</button>
+                  <button id="nextLevelPauseButton" class="menu-action next-pause-button" type="button">Следующий</button>
+                </div>
+              </div>
+              <div class="pause-actions">
+                <button id="resumeButton" class="menu-action" type="button">Продолжить</button>
+                <button id="restartPauseButton" class="menu-action secondary" type="button">Заново</button>
+                <button id="backToMenuButton" class="menu-action secondary" type="button">В меню</button>
+              </div>
+            </div>
+          </div>
+          <div id="editorMenu" class="overlay editor-overlay" hidden>
+            <div class="editor-window">
+              <div class="editor-head">
+                <div>
+                  <p class="menu-kicker">редактор уровней</p>
+                  <h2>Собери свой маршрут</h2>
+                </div>
+                <div class="editor-actions">
+                  <button id="editorSaveButton" class="menu-action" type="button">Сохранить</button>
+                  <button id="editorLoadButton" class="menu-action secondary" type="button">Загрузить</button>
+	                  <input id="editorLoadInput" type="file" accept=".js,.json" hidden />
+	                  <div id="editorLoadDialog" class="load-dialog" hidden>
+	                    <div class="load-dialog-window">
+	                      <div class="load-dialog-head">
+	                        <div>
+	                          <p class="menu-kicker">загрузка уровня</p>
+	                          <h3>Перетащи файл сюда</h3>
+	                        </div>
+	                        <button id="editorLoadCloseButton" class="editor-mode-button" type="button">Закрыть</button>
+	                      </div>
+	                      <div id="editorDropZone" class="drop-zone">
+	                        <strong>.js или .json</strong>
+	                        <span>Можно бросить файл мышкой или выбрать через проводник.</span>
+	                      </div>
+	                      <div class="load-dialog-actions">
+	                        <button id="editorLoadChooseButton" class="menu-action" type="button">Выбрать файл</button>
+	                      </div>
+	                    </div>
+	                  </div>
+                  <button id="editorSaveFileButton" class="menu-action secondary" type="button">В папку уровней</button>
+                  <button id="editorTestButton" class="menu-action" type="button">Тест</button>
+                  <button id="editorFullscreenButton" class="menu-action secondary" type="button">Развернуть</button>
+                  <button id="editorBackButton" class="menu-action secondary" type="button">В меню</button>
+                </div>
+              </div>
+              <div class="editor-sizebar">
+                <label>Ширина <input id="editorWidthInput" type="number" min="20" max="120" value="75" /></label>
+                <label>Высота <input id="editorHeightInput" type="number" min="20" max="120" value="45" /></label>
+                <button id="editorResizeButton" class="menu-action secondary" type="button">Применить размер</button>
+              </div>
+              <div class="editor-commandbar">
+                <div class="editor-modebar" aria-label="Режим редактора">
+                  <button class="editor-mode-button is-active" type="button" data-editor-mode="insert">Вставка</button>
+                  <button class="editor-mode-button" type="button" data-editor-mode="select">Выделение</button>
+                  <button class="editor-mode-button" type="button" data-editor-mode="move">Перемещение</button>
+                  <button class="editor-mode-button" type="button" data-editor-mode="erase">Ластик</button>
+                </div>
+                <div class="editor-historybar">
+                  <button id="editorUndoButton" class="editor-mode-button" type="button">Отменить</button>
+                  <button id="editorRedoButton" class="editor-mode-button" type="button">Вернуть</button>
+                </div>
+              </div>
+              <div class="editor-body">
+                <aside class="editor-sidebar">
+                  <section class="editor-card">
+                    <div class="editor-card-title">
+                      <span>Инструменты</span>
+                      <small>ЛКМ рисует</small>
+                    </div>
+                    <div id="editorPalette" class="editor-palette" aria-label="Палитра редактора"></div>
+                  </section>
+                  <section id="editorSettings" class="editor-card editor-settings" aria-label="Настройки редактора"></section>
+                </aside>
+                <section class="editor-stage">
+                  <canvas id="editorCanvas" class="editor-canvas" width="960" height="576"></canvas>
+                  <div class="editor-status" id="editorStatus">ЛКМ: действие режима. Колесо: масштаб. Shift/ПКМ: камера. Ctrl+Z / Ctrl+Shift+Z / Ctrl+C / Ctrl+V.</div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="message" class="message">Найди настоящий выход. Не верь ничему.</div>
+      </section>
+    </main>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

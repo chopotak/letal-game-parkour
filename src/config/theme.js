@@ -1,0 +1,15 @@
+export const Theme = Object.freeze({
+  background: "#111820",
+  wall: "#26364a",
+  wallLight: "#344961",
+  wallDark: "#1a2534",
+  shadow: "#05070a",
+  spike: "#ff4c6a",
+  player: "#71f79f",
+  playerLight: "#d6ffe3",
+  key: "#52eadc",
+  coin: "#ffd15c",
+  saw: "#eef4ff",
+  steel: "#7b8ea7",
+  text: "rgba(247, 242, 223, 0.74)",
+});
