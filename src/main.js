@@ -50,6 +50,8 @@ const ui = new UIController({
   mainMenuEl,
   pauseMenuEl: document.getElementById("pauseMenu"),
   editorMenuEl,
+  topTitleEl: document.getElementById("topTitle"),
+  topKickerEl: document.getElementById("topKicker"),
 });
 
 const editor = new LevelEditor({
@@ -228,6 +230,7 @@ document.getElementById("restartPauseButton").addEventListener("click", () => ga
 document.getElementById("restartWinPauseButton").addEventListener("click", () => game.restartLevel());
 document.getElementById("nextLevelPauseButton").addEventListener("click", () => playNextLevel());
 document.getElementById("backToMenuButton").addEventListener("click", () => game.backToMenu());
+document.getElementById("pauseFullscreenButton").addEventListener("click", () => toggleGameFullscreen());
 document.getElementById("hitboxToggle").addEventListener("change", (event) => {
   game.setHitboxesVisible(event.target.checked);
   screenEl.classList.toggle("show-hitboxes", event.target.checked);
@@ -238,13 +241,8 @@ window.addEventListener("level-completed", (event) => {
 });
 window.addEventListener("keydown", (event) => {
   handleSecretCommand(event);
-  if (event.code === "Escape") {
+  if (event.code === "Tab") {
     event.preventDefault();
-    if (gamePanelEl.classList.contains("is-browser-fullscreen")) {
-      gamePanelEl.classList.remove("is-browser-fullscreen");
-      updateFullscreenButton();
-      return;
-    }
     if (game.state === "editor") {
       game.closeEditor();
       return;
@@ -255,6 +253,12 @@ window.addEventListener("keydown", (event) => {
   if (event.code === "Enter" && game.player?.win) {
     event.preventDefault();
     game.restartLevel();
+    return;
+  }
+  if (event.code === "Enter" && game.state === "menu" && !menuLevelsEl.hidden && !levelListPlayButton.disabled) {
+    event.preventDefault();
+    game.playFromMenu();
+    return;
   }
   if (event.code === "Space" && game.player?.win) {
     event.preventDefault();
@@ -276,7 +280,6 @@ function createMenuLevels() {
   return [
     ...builtInLevels,
     ...customLevels,
-    { id: "editor-level", title: "Мой уровень", badge: "Редактор", source: "Черновик", kind: "editor", data: editor.exportLevelData() },
   ];
 }
 
@@ -345,6 +348,16 @@ function readProgress() {
   }
 }
 
+function isLevelUnlocked(levels, index, progress) {
+  if (currentLevelList !== "built-in") return true;
+  if (index <= 0) return true;
+  return Boolean(progress[levels[index - 1]?.id]);
+}
+
+function firstUnlockedLevel(levels, progress) {
+  return levels.find((level, index) => isLevelUnlocked(levels, index, progress));
+}
+
 function saveLevelProgress(detail) {
   if (!detail?.levelId) return;
   const progress = readProgress();
@@ -370,8 +383,9 @@ function formatTime(ms) {
 
 function playNextLevel() {
   const levels = levelsForCurrentList();
+  const progress = readProgress();
   const index = levels.findIndex((level) => level.id === game.selectedLevelId);
-  const next = levels[index + 1] ?? levels[0];
+  const next = levels.find((level, levelIndex) => levelIndex > index && isLevelUnlocked(levels, levelIndex, progress)) ?? levels[0];
   if (!next) return;
   game.selectLevel(next.id);
   game.playFromMenu();
@@ -382,7 +396,8 @@ function renderLevelMenu() {
   const levels = levelsForCurrentList();
   const progress = readProgress();
   logUi("render level menu", { list: currentLevelList, levels: levels.map((level) => level.id), devMode });
-  levelListPlayButton.disabled = levels.length === 0;
+  const selectedIndex = levels.findIndex((level) => level.id === game.selectedLevelId);
+  levelListPlayButton.disabled = levels.length === 0 || selectedIndex < 0 || !isLevelUnlocked(levels, selectedIndex, progress);
   if (levels.length === 0) {
     const empty = document.createElement("div");
     empty.className = "empty-level-list";
@@ -390,11 +405,15 @@ function renderLevelMenu() {
     levelSelectEl.append(empty);
   }
   levels.forEach((level) => {
+    const index = levels.indexOf(level);
     const done = progress[level.id];
+    const locked = !isLevelUnlocked(levels, index, progress);
     const button = document.createElement("button");
     button.className = `level-card ${currentLevelList === "custom" ? "compact-level-card" : ""}`;
     if (done) button.classList.add("is-completed");
+    if (locked) button.classList.add("is-locked");
     button.type = "button";
+    button.disabled = locked;
     button.dataset.levelId = level.id;
     button.innerHTML = `
       <span>${level.badge ?? level.source ?? "Уровень"}</span>
@@ -402,9 +421,15 @@ function renderLevelMenu() {
       <small>${level.source ?? ""}</small>
     `;
     button.addEventListener("click", () => {
+      if (locked) return;
       logUi("level selected", { levelId: level.id, list: currentLevelList });
       game.selectLevel(level.id);
+      renderLevelMenu();
     });
+    if (locked) {
+      button.querySelector("span").textContent = "Закрыто";
+      button.querySelector("small").textContent = "пройди предыдущий уровень";
+    }
     if (done) {
       button.querySelector("span").textContent = "Пройден";
       button.querySelector("small").textContent = `лучшее ${formatTime(done.bestMs)} · смертей ${done.deaths}`;
@@ -441,7 +466,9 @@ function showLevelList(kind) {
   levelListTitleEl.textContent = kind === "custom" ? "Свои уровни" : "Играть";
   levelListKickerEl.textContent = kind === "custom" ? "src/levels/custom" : "встроенные уровни";
   const levels = levelsForCurrentList();
-  if (levels[0]) game.selectLevel(levels[0].id);
+  const progress = readProgress();
+  const unlocked = firstUnlockedLevel(levels, progress);
+  if (unlocked) game.selectLevel(unlocked.id);
   renderLevelMenu();
 }
 
@@ -475,7 +502,7 @@ async function importDroppedEditorLevelFile(file) {
 
 function levelsForCurrentList() {
   if (currentLevelList === "custom") return customLevels;
-  return [...builtInLevels, menuLevels.find((level) => level.id === "editor-level")].filter(Boolean);
+  return builtInLevels;
 }
 
 function openLevelInEditor(level) {
@@ -544,7 +571,8 @@ async function toggleGameFullscreen() {
 
 function updateFullscreenButton() {
   const active = Boolean(document.fullscreenElement) || gamePanelEl.classList.contains("is-browser-fullscreen");
-  gameFullscreenButton.querySelector("strong").textContent = active ? "Свернуть игру" : "Развернуть игру";
+  gameFullscreenButton.querySelector("strong").textContent = active ? "Свернуть игру" : "Играть на весь экран";
+  document.getElementById("pauseFullscreenButton").innerHTML = active ? "Свернуть <small>экран</small>" : "Весь экран <small>рекомендовано</small>";
 }
 
 async function loadCustomLevels() {

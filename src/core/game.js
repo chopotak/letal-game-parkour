@@ -97,6 +97,7 @@ export class Game {
 
   resume() {
     if (this.state !== "paused") return;
+    if (this.player?.win) return;
     this.state = "playing";
     this.ui.showPauseMenu(false);
   }
@@ -681,6 +682,7 @@ export class Game {
       this.player.hasKey = true;
       this.effects.burst(key.x + 9, key.y + 9, Theme.key, 24);
       this.applyActions(this.level.data.onKey);
+      if (!this.level.data.onKey?.message) this.ui.showMessage("Ключ забран. Теперь дверь хотя бы обязана притвориться честной.");
     }
 
     for (const door of this.level.doors.fake) {
@@ -898,8 +900,10 @@ export class Game {
     const elapsedMs = performance.now() - this.startedAt;
     this.effects.burst(this.player.x + this.player.w / 2, this.player.y + this.player.h / 2, Theme.player, 42);
     this.ui.showMessage("Настоящий выход найден. Лабиринт нехотя тебя уважает.");
-    this.ui.setRestartVisible(true);
+    this.ui.setRestartVisible(false);
     this.setWinState(true);
+    this.state = "paused";
+    this.ui.showPauseMenu(true);
     window.dispatchEvent(new CustomEvent("level-completed", {
       detail: {
         levelId: this.selectedLevelId,
@@ -987,6 +991,7 @@ export class Game {
     this.renderer.resetStaticLayer();
     this.renderer.setInitialCamera(this.level, this.player);
     this.ui.setSelectedLevel(selected.id);
+    this.ui.setHeader?.(selected.title ?? selected.data.name ?? "Уровень", "текущий уровень");
   }
 
   openEditor() {

@@ -3,19 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Летальность Бытия</title>
+    <title>Смертельный паркурчик</title>
     <link rel="stylesheet" href="styles/base.css" />
     <link rel="stylesheet" href="styles/game.css" />
   </head>
   <body>
     <main class="shell">
-      <section id="gamePanel" class="game-panel" aria-label="Летальность Бытия">
+      <section id="gamePanel" class="game-panel" aria-label="Смертельный паркурчик">
         <div class="topbar">
           <div>
-            <p class="eyebrow">платформер про цену импульса</p>
-            <h1>Летальность Бытия</h1>
+            <p id="topKicker" class="eyebrow">платформер про цену импульса</p>
+            <h1 id="topTitle">Смертельный паркурчик</h1>
           </div>
           <div class="stats">
+            <span>Пауза - TAB</span>
             <span id="deathCount">Смерти: 0</span>
             <span id="timer">00:00</span>
           </div>
@@ -32,25 +33,29 @@
               <div id="menuHome" class="menu-view">
                 <div class="menu-hero">
                   <p class="menu-kicker">ретро-платформер</p>
-                  <h2>Летальность Бытия</h2>
-                  <p class="menu-tagline">Выбирай уровень, сохраняй свои маршруты и настраивай физику прямо в редакторе.</p>
+                  <h2>Смертельный паркурчик</h2>
+                  <p class="menu-tagline">Выбирай маршрут, открывай уровни по порядку и лучше сразу разворачивай игру на весь экран.</p>
                 </div>
                 <div class="menu-home-grid">
                   <button id="playButton" class="menu-tile primary" type="button">
-                    <span>Играть</span>
-                    <strong>Встроенные уровни</strong>
+                    <span>кампания</span>
+                    <strong>Играть</strong>
+                    <small>уровни открываются по порядку</small>
                   </button>
                   <button id="customLevelsButton" class="menu-tile" type="button">
-                    <span>Свои уровни</span>
+                    <span>дополнительно</span>
                     <strong id="customLevelStatus">src/levels/custom</strong>
+                    <small>твои сохранённые карты</small>
                   </button>
-                  <button id="editorButton" class="menu-tile" type="button">
-                    <span>Редактор</span>
-                    <strong>Собрать уровень</strong>
+                  <button id="gameFullscreenButton" class="menu-tile fullscreen-tile" type="button">
+                    <span>рекомендовано</span>
+                    <strong>Играть на весь экран</strong>
+                    <small>лучше видно ловушки и прыжки</small>
                   </button>
-                  <button id="gameFullscreenButton" class="menu-tile" type="button">
-                    <span>Экран</span>
-                    <strong>Развернуть игру</strong>
+                  <button id="editorButton" class="menu-tile utility-tile" type="button">
+                    <span>техническое</span>
+                    <strong>Редактор уровней</strong>
+                    <small>сборка и правка карт</small>
                   </button>
                 </div>
               </div>
@@ -61,13 +66,18 @@
                     <p class="menu-kicker" id="levelListKicker">выбор уровня</p>
                     <h2 id="levelListTitle">Уровни</h2>
                   </div>
-                  <button id="levelListPlayButton" class="menu-action" type="button">Запустить</button>
+                  <button id="levelListPlayButton" class="menu-action play-selected-button" type="button">Запустить <small>Enter</small></button>
                 </div>
                 <div id="levelSelect" class="level-select" aria-label="Выбор уровня"></div>
               </div>
             </div>
           </div>
           <div id="pauseMenu" class="overlay pause-overlay" hidden>
+            <label class="pause-toggle tech-toggle" title="Хитбоксы">
+              <input id="hitboxToggle" type="checkbox" />
+              <span>▧</span>
+            </label>
+            <button id="pauseFullscreenButton" class="pause-fullscreen-button" type="button">Весь экран <small>рекомендовано</small></button>
             <div class="menu-window pause-window">
               <p class="menu-kicker">пауза</p>
               <h2>Легенда</h2>
@@ -80,10 +90,6 @@
                 <span>K</span><p>диагностика</p>
                 <span>Esc</span><p>пауза</p>
               </div>
-              <label class="pause-toggle">
-                <input id="hitboxToggle" type="checkbox" />
-                <span>Хитбоксы</span>
-              </label>
               <div class="win-pause-section">
                 <p class="win-pause-title">Уровень пройден</p>
                 <p class="win-pause-hotkeys"><b>Enter</b> заново · <b>Space</b> следующий уровень</p>
@@ -92,7 +98,7 @@
                   <button id="nextLevelPauseButton" class="menu-action next-pause-button" type="button">Следующий</button>
                 </div>
               </div>
-              <div class="pause-actions">
+              <div class="pause-actions regular-pause-actions">
                 <button id="resumeButton" class="menu-action" type="button">Продолжить</button>
                 <button id="restartPauseButton" class="menu-action secondary" type="button">Заново</button>
                 <button id="backToMenuButton" class="menu-action secondary" type="button">В меню</button>

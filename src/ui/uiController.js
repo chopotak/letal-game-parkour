@@ -1,5 +1,5 @@
 export class UIController {
-  constructor({ messageEl, deathsEl, timerEl, restartBtn, winActionsEl, gamePanelEl, screenEl, mainMenuEl, pauseMenuEl, editorMenuEl }) {
+  constructor({ messageEl, deathsEl, timerEl, restartBtn, winActionsEl, gamePanelEl, screenEl, mainMenuEl, pauseMenuEl, editorMenuEl, topTitleEl, topKickerEl }) {
     this.messageEl = messageEl;
     this.deathsEl = deathsEl;
     this.timerEl = timerEl;
@@ -10,6 +10,8 @@ export class UIController {
     this.mainMenuEl = mainMenuEl;
     this.pauseMenuEl = pauseMenuEl;
     this.editorMenuEl = editorMenuEl;
+    this.topTitleEl = topTitleEl;
+    this.topKickerEl = topKickerEl;
     this.lastDeaths = null;
     this.lastTimer = "";
     this.lastMessage = "";
@@ -63,6 +65,7 @@ export class UIController {
   showMainMenu(visible) {
     this.mainMenuEl.hidden = !visible;
     this.gamePanelEl.classList.toggle("is-menu", visible);
+    if (visible) this.setHeader("Смертельный паркурчик", "платформер про цену импульса");
   }
 
   showPauseMenu(visible) {
@@ -84,5 +87,10 @@ export class UIController {
     document.querySelectorAll("[data-physics-mode]").forEach((button) => {
       button.classList.toggle("is-active", button.dataset.physicsMode === mode);
     });
+  }
+
+  setHeader(title, kicker = "уровень") {
+    if (this.topTitleEl) this.topTitleEl.textContent = title;
+    if (this.topKickerEl) this.topKickerEl.textContent = kicker;
   }
 }

@@ -75,6 +75,10 @@ h1 {
   text-shadow: 4px 4px 0 #000;
 }
 
+.game-panel:not(.is-menu) h1 {
+  font-size: clamp(24px, 3.4vw, 42px);
+}
+
 .stats {
   display: flex;
   gap: 10px;
@@ -247,7 +251,7 @@ canvas {
   z-index: 1;
   min-height: 0;
   display: grid;
-  align-content: center;
+  align-content: baseline;
   gap: 22px;
 }
 
@@ -311,8 +315,9 @@ canvas {
 
 .menu-home-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 1.25fr 0.8fr 0.8fr;
   gap: 12px;
+  margin: 0px 50px;
 }
 
 .menu-tile {
@@ -332,12 +337,55 @@ canvas {
     #172232;
   box-shadow: 4px 4px 0 #020406;
   cursor: pointer;
+  overflow: hidden;
+}
+
+#customLevelsButton {
+  display: none;
 }
 
 .menu-tile.primary {
   color: #071014;
   border-color: var(--gold);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.35), transparent 45%),
+    var(--gold);
+}
+
+.fullscreen-tile {
+  min-height: 158px;
+  color: #071014;
+  border-color: #71f79f;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.35), transparent 42%),
+    linear-gradient(135deg, #71f79f, var(--cyan));
+  box-shadow:
+    4px 4px 0 #020406,
+    0 0 0 3px rgba(113, 247, 159, 0.18);
+}
+
+.fullscreen-tile::after {
+  content: "!";
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  color: #071014;
   background: var(--gold);
+  font-weight: 900;
+  box-shadow: 3px 3px 0 #020406;
+}
+
+.utility-tile {
+  min-height: 158px;
+  align-self: end;
+  opacity: 0.9;
+  background:
+    linear-gradient(rgba(123, 142, 167, 0.12), transparent),
+    #111820;
 }
 
 .menu-tile span {
@@ -353,9 +401,16 @@ canvas {
   line-height: 1.05;
 }
 
+.menu-tile small,
+.play-selected-button small {
+  color: inherit;
+  opacity: 0.72;
+  font-size: 11px;
+}
+
 .menu-list-head {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr) 150px;
+  grid-template-columns: 120px minmax(0, 1fr) 170px;
   align-items: end;
   gap: 14px;
 }
@@ -492,11 +547,12 @@ canvas {
 .level-card.is-active {
   border-color: var(--cyan);
   background:
-    linear-gradient(135deg, rgba(82, 234, 220, 0.18), transparent 54%),
+    linear-gradient(135deg, rgba(82, 234, 220, 0.3), transparent 54%),
     #172232;
   box-shadow:
     4px 4px 0 #020406,
-    inset 0 0 0 2px rgba(82, 234, 220, 0.12);
+    inset 0 0 0 3px var(--cyan),
+    0 0 0 3px rgba(82, 234, 220, 0.18);
 }
 
 .level-card.is-completed {
@@ -504,6 +560,14 @@ canvas {
   background:
     linear-gradient(135deg, rgba(113, 247, 159, 0.22), transparent 58%),
     #13251c;
+}
+
+.level-card.is-completed.is-active {
+  border-color: var(--cyan);
+  box-shadow:
+    4px 4px 0 #020406,
+    inset 0 0 0 3px var(--cyan),
+    0 0 0 4px rgba(113, 247, 159, 0.25);
 }
 
 .level-card.is-completed span {
@@ -522,6 +586,27 @@ canvas {
   display: grid;
   place-items: center;
   font-weight: 900;
+  box-shadow: 3px 3px 0 #020406;
+}
+
+.level-card.is-locked {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: grayscale(0.65);
+}
+
+.level-card.is-locked::after {
+  content: "🔒";
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: #0b1018;
+  border: 2px solid #304057;
   box-shadow: 3px 3px 0 #020406;
 }
 
@@ -621,7 +706,7 @@ canvas {
 }
 
 .pause-window {
-  width: min(480px, calc(100% - 16px));
+  width: min(430px, calc(100% - 16px));
   height: auto;
   max-height: calc(100% - 48px);
   overflow: auto;
@@ -638,12 +723,19 @@ canvas {
 }
 
 .controls-grid {
-  display: flex;
-  flex-wrap: wrap;
-  grid-template-columns: minmax(46px, 74px) minmax(0, 1fr);
-  gap: 5px 9px;
+  position: fixed;
+  left: max(18px, calc((100vw - 1060px) / 2 + 18px));
+  top: 126px;
+  width: min(265px, 28vw);
+  display: grid;
+  grid-template-columns: minmax(42px, 68px) minmax(0, 1fr);
+  gap: 7px 9px;
   margin: 0 0 12px;
+  padding: 12px;
   align-items: center;
+  border: 2px solid #304057;
+  background: rgba(8, 12, 18, 0.9);
+  box-shadow: 4px 4px 0 #020406;
   font-size: 13px;
 }
 
@@ -684,6 +776,57 @@ canvas {
   cursor: pointer;
 }
 
+.tech-toggle {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 4;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.tech-toggle span {
+  font-size: 22px;
+}
+
+.tech-toggle input {
+  position: absolute;
+  opacity: 0;
+}
+
+.tech-toggle:has(input:checked) {
+  color: #071014;
+  background: var(--cyan);
+}
+
+.pause-fullscreen-button {
+  position: absolute;
+  right: 18px;
+  top: 74px;
+  z-index: 4;
+  width: 170px;
+  padding: 10px;
+  color: #071014;
+  font: inherit;
+  font-weight: 900;
+  border: 0;
+  background:
+    linear-gradient(135deg, #71f79f, var(--cyan));
+  box-shadow: 4px 4px 0 #020406;
+  cursor: pointer;
+}
+
+.pause-fullscreen-button small {
+  display: block;
+  font-size: 10px;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
 .pause-toggle input {
   width: 15px;
   height: 15px;
@@ -710,6 +853,14 @@ canvas {
   display: none;
 }
 
+.game-panel.is-won #restartPauseButton {
+  display: none;
+}
+
+.game-panel.is-won .regular-pause-actions {
+  grid-template-columns: 1fr;
+}
+
 .win-pause-title {
   margin: 0;
   color: #71f79f;
@@ -732,8 +883,8 @@ canvas {
 }
 
 .pause-actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   width: 100%;
 }
@@ -754,6 +905,8 @@ canvas {
   }
 
   .controls-grid {
+    position: static;
+    width: auto;
     grid-template-columns: minmax(42px, 64px) minmax(0, 1fr);
     gap: 5px 8px;
   }
