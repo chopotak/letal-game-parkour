@@ -92,7 +92,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
     "######################################################################"
   ],
   "messages": [
-    "Невозможный уровень"
+    "Невозможный уровень."
   ],
   "labels": [],
   "buttonActions": {},
@@ -235,15 +235,6 @@ export const LayrinthImpossibleFinal = Object.freeze({
     "robots": [
       {
         "id": "robot0",
-        "tx": 12,
-        "ty": 5,
-        "direction": "left",
-        "maxSpeed": 2.2,
-        "cooldownFrames": 90,
-        "acceleration": 0.08
-      },
-      {
-        "id": "robot1",
         "tx": 5,
         "ty": 26,
         "direction": "left",
@@ -252,7 +243,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
         "acceleration": 0.08
       },
       {
-        "id": "robot2",
+        "id": "robot1",
         "tx": 56,
         "ty": 26,
         "direction": "left",
@@ -261,7 +252,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
         "acceleration": 0.08
       },
       {
-        "id": "robot3",
+        "id": "robot2",
         "tx": 7,
         "ty": 65,
         "direction": "right",
