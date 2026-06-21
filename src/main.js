@@ -372,10 +372,29 @@ function updateInMemorySavedLevel({ title, fileName, collection }) {
 
 function readProgress() {
   try {
-    return JSON.parse(sessionStorage.getItem(PROGRESS_KEY) ?? "{}");
+    const saved = localStorage.getItem(PROGRESS_KEY) ?? readCookie(PROGRESS_KEY);
+    const progress = JSON.parse(saved ?? "{}");
+    if (saved && !localStorage.getItem(PROGRESS_KEY)) localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    return progress;
   } catch {
     return {};
   }
+}
+
+function readCookie(name) {
+  const prefix = `${encodeURIComponent(name)}=`;
+  const value = document.cookie
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(prefix))
+    ?.slice(prefix.length) ?? null;
+  return value ? decodeURIComponent(value) : null;
+}
+
+function writeProgress(progress) {
+  const json = JSON.stringify(progress);
+  localStorage.setItem(PROGRESS_KEY, json);
+  document.cookie = `${encodeURIComponent(PROGRESS_KEY)}=${encodeURIComponent(json)}; max-age=31536000; path=/; SameSite=Lax`;
 }
 
 function isLevelUnlocked(levels, index, progress) {
@@ -400,7 +419,7 @@ function saveLevelProgress(detail) {
       title: detail.title ?? detail.levelId,
       completedAt: Date.now(),
     };
-    sessionStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    writeProgress(progress);
   }
 }
 

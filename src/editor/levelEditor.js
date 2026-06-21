@@ -1290,7 +1290,7 @@ export class LevelEditor {
         active: rocket.active ?? false,
         aggression: rocket.aggression ?? 8,
         radiusTiles: rocket.radiusTiles ?? 10,
-        rocketSpeed: rocket.maxSpeed ?? rocket.rocketSpeed ?? 4.2,
+        rocketSpeed: rocket.rocketSpeed ?? rocket.maxSpeed ?? 4.2,
         cooldownFrames: rocket.cooldownFrames ?? 120,
       });
     });
@@ -1501,7 +1501,7 @@ export class LevelEditor {
             ty: y,
             active: Boolean(meta.active),
             radiusTiles: Number(meta.radiusTiles ?? 10),
-            rocketSpeed: Number((Number(meta.rocketSpeed ?? 4.2) * (rocketTuning.speedScale ?? 1)).toFixed(2)),
+            rocketSpeed: Number(Number(meta.rocketSpeed ?? 4.2).toFixed(2)),
             cooldownFrames: Number(meta.cooldownFrames ?? 120),
             ...rocketTuning,
           });
