@@ -635,5 +635,6 @@ export const Level5 = Object.freeze({
     "lasers": [],
     "slopes": [],
     "bombs": []
-  }
+  },
+  "difficulty": 4
 });

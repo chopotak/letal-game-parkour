@@ -8,8 +8,13 @@ import { Level3 } from "./levels/level-three.js";
 import { Level4 } from "./levels/level-four.js";
 import { Level5 } from "./levels/level-five.js";
 import { CustomLevelLast } from "./levels/level-last.js";
+import { LayrinthImpossibleFinal } from "./levels/custom/labyrinth-impossible-final.js";
 import { GameRenderer } from "./rendering/gameRenderer.js";
 import { UIController } from "./ui/uiController.js";
+
+const EXTRA_BUILT_IN_LEVELS = [
+  { id: "built-in-labyrinth-impossible-final", title: LayrinthImpossibleFinal.name ?? "Impossible Labyrinth", badge: "Level 7", source: "custom/labyrinth-impossible-final.js", kind: "built-in", collection: "built-in", fileName: "labyrinth-impossible-final", exportName: "LayrinthImpossibleFinal", data: LayrinthImpossibleFinal },
+];
 
 const FALLBACK_BUILT_IN_LEVELS = [
   { id: "built-in-level-one", title: LevelOne.name ?? "Level 1", badge: "Level 1", source: "level-one.js", kind: "built-in", collection: "built-in", fileName: "level-one", exportName: "LevelOne", data: LevelOne },
@@ -18,6 +23,7 @@ const FALLBACK_BUILT_IN_LEVELS = [
   { id: "built-in-level-four", title: Level4.name ?? "Level 4", badge: "Level 4", source: "level-four.js", kind: "built-in", collection: "built-in", fileName: "level-four", exportName: "Level4", data: Level4 },
   { id: "built-in-level-five", title: Level5.name ?? "Level 5", badge: "Level 5", source: "level-five.js", kind: "built-in", collection: "built-in", fileName: "level-five", exportName: "Level5", data: Level5 },
   { id: "built-in-level-last", title: CustomLevelLast.name ?? "Final", badge: "Финал", source: "level-last.js", kind: "built-in", collection: "built-in", fileName: "level-last", exportName: "CustomLevelLast", data: CustomLevelLast },
+  ...EXTRA_BUILT_IN_LEVELS,
 ];
 
 const canvas = document.getElementById("game");
@@ -75,6 +81,11 @@ const levelListTitleEl = document.getElementById("levelListTitle");
 const levelListKickerEl = document.getElementById("levelListKicker");
 const levelListPlayButton = document.getElementById("levelListPlayButton");
 const PROGRESS_KEY = "lethality-level-progress";
+const FULLSCREEN_USED_KEY = "lethality-fullscreen-used";
+const FULLSCREEN_NAG_KEY = "lethality-fullscreen-nag-dismissed";
+const fullscreenNagDialog = document.getElementById("fullscreenNagDialog");
+const fullscreenNagCloseButton = document.getElementById("fullscreenNagCloseButton");
+const fullscreenNagFullscreenButton = document.getElementById("fullscreenNagFullscreenButton");
 let builtInLevels = await loadBuiltInLevels();
 let customLevels = await loadCustomLevels();
 let menuLevels = createMenuLevels();
@@ -82,6 +93,8 @@ let currentLevelList = "built-in";
 let devMode = false;
 let secretBuffer = "";
 let editorSource = { collection: "custom", fileName: "custom-level", exportName: null, levelId: "editor-level" };
+let pendingFullscreenNagAction = null;
+let fullscreenNagTimer = null;
 logUi("boot", { customLevels: customLevels.length, menuLevels: menuLevels.length });
 
 const game = new Game({
@@ -105,13 +118,19 @@ mainMenuEl.addEventListener("click", (event) => {
   if (button.id === "playButton") {
     event.preventDefault();
     event.stopPropagation();
-    showLevelList("built-in");
+    maybeRunAfterFullscreenNag(() => showLevelList("built-in"));
     return;
   }
   if (button.id === "customLevelsButton") {
     event.preventDefault();
     event.stopPropagation();
     showLevelList("custom");
+    return;
+  }
+  if (button.id === "instructionButton") {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById("instructionDialog").hidden = false;
     return;
   }
   if (button.id === "gameFullscreenButton") {
@@ -121,14 +140,23 @@ mainMenuEl.addEventListener("click", (event) => {
     return;
   }
 });
+document.getElementById("instructionCloseButton").addEventListener("click", () => {
+  document.getElementById("instructionDialog").hidden = true;
+});
+document.getElementById("instructionDialog").addEventListener("click", (event) => {
+  if (event.target.id === "instructionDialog") event.currentTarget.hidden = true;
+});
 document.getElementById("levelListBackButton").addEventListener("click", () => {
   logUi("level list back");
   showMenuHome();
 });
 document.getElementById("levelListPlayButton").addEventListener("click", () => {
   logUi("level list play", { selectedLevelId: game.selectedLevelId });
-  game.playFromMenu();
+  if (levelListPlayButton.disabled) return;
+  playFromMenuWithFullscreenNag();
 });
+fullscreenNagCloseButton.addEventListener("click", () => closeFullscreenNag());
+fullscreenNagFullscreenButton.addEventListener("click", () => acceptFullscreenNagWithFullscreen());
 document.getElementById("editorButton").addEventListener("click", () => {
   logUi("open editor from menu");
   editorSource = { collection: "custom", fileName: "custom-level", exportName: null, levelId: "editor-level" };
@@ -231,6 +259,7 @@ document.getElementById("restartWinPauseButton").addEventListener("click", () =>
 document.getElementById("nextLevelPauseButton").addEventListener("click", () => playNextLevel());
 document.getElementById("backToMenuButton").addEventListener("click", () => game.backToMenu());
 document.getElementById("pauseFullscreenButton").addEventListener("click", () => toggleGameFullscreen());
+document.getElementById("topPauseButton").addEventListener("click", () => game.togglePause());
 document.getElementById("hitboxToggle").addEventListener("change", (event) => {
   game.setHitboxesVisible(event.target.checked);
   screenEl.classList.toggle("show-hitboxes", event.target.checked);
@@ -241,6 +270,7 @@ window.addEventListener("level-completed", (event) => {
 });
 window.addEventListener("keydown", (event) => {
   handleSecretCommand(event);
+  if (event.target?.matches?.("input, textarea, select")) return;
   if (event.code === "Tab") {
     event.preventDefault();
     if (game.state === "editor") {
@@ -257,7 +287,7 @@ window.addEventListener("keydown", (event) => {
   }
   if (event.code === "Enter" && game.state === "menu" && !menuLevelsEl.hidden && !levelListPlayButton.disabled) {
     event.preventDefault();
-    game.playFromMenu();
+    playFromMenuWithFullscreenNag();
     return;
   }
   if (event.code === "Space" && game.player?.win) {
@@ -381,6 +411,20 @@ function formatTime(ms) {
   return `${mm}:${ss}`;
 }
 
+function difficultyStars(level) {
+  const difficulty = Math.max(1, Math.min(5, Math.round(Number(level.data?.difficulty ?? level.difficulty ?? 1))));
+  return difficulty;
+}
+
+function pixelStars(count) {
+  return `<span class="pixel-stars" aria-label="${count} из 5">${Array.from({ length: count }, () => '<span class="pixel-star"></span>').join("")}</span>`;
+}
+
+function difficultyLine(level, suffix = "") {
+  const stars = difficultyStars(level);
+  return `<span class="difficulty-row"><span class="difficulty-label">Сложность</span>${pixelStars(stars)}</span>${suffix ? `<span class="difficulty-extra">${suffix}</span>` : ""}`;
+}
+
 function playNextLevel() {
   const levels = levelsForCurrentList();
   const progress = readProgress();
@@ -388,7 +432,76 @@ function playNextLevel() {
   const next = levels.find((level, levelIndex) => levelIndex > index && isLevelUnlocked(levels, levelIndex, progress)) ?? levels[0];
   if (!next) return;
   game.selectLevel(next.id);
-  game.playFromMenu();
+  playFromMenuWithFullscreenNag();
+}
+
+function playFromMenuWithFullscreenNag() {
+  maybeRunAfterFullscreenNag(() => game.playFromMenu());
+}
+
+function hasUsedFullscreen() {
+  return sessionStorage.getItem(FULLSCREEN_USED_KEY) === "1";
+}
+
+function hasDismissedFullscreenNag() {
+  return sessionStorage.getItem(FULLSCREEN_NAG_KEY) === "1";
+}
+
+function rememberFullscreenUsed() {
+  sessionStorage.setItem(FULLSCREEN_USED_KEY, "1");
+}
+
+function maybeRunAfterFullscreenNag(action) {
+  if (hasUsedFullscreen() || hasDismissedFullscreenNag()) {
+    action();
+    return;
+  }
+  pendingFullscreenNagAction = action;
+  showFullscreenNag();
+}
+
+function showFullscreenNag() {
+  logUi("fullscreen nag open");
+  fullscreenNagDialog.hidden = false;
+  fullscreenNagCloseButton.disabled = true;
+  let seconds = 5;
+  fullscreenNagCloseButton.textContent = `Подожди ${seconds}`;
+  clearInterval(fullscreenNagTimer);
+  fullscreenNagTimer = setInterval(() => {
+    seconds -= 1;
+    if (seconds > 0) {
+      fullscreenNagCloseButton.textContent = `Подожди ${seconds}`;
+      return;
+    }
+    clearInterval(fullscreenNagTimer);
+    fullscreenNagTimer = null;
+    fullscreenNagCloseButton.disabled = false;
+    fullscreenNagCloseButton.textContent = "Ладно, играю как есть";
+  }, 1000);
+}
+
+function closeFullscreenNag() {
+  if (fullscreenNagCloseButton.disabled) return;
+  logUi("fullscreen nag dismissed");
+  sessionStorage.setItem(FULLSCREEN_NAG_KEY, "1");
+  fullscreenNagDialog.hidden = true;
+  const action = pendingFullscreenNagAction;
+  pendingFullscreenNagAction = null;
+  action?.();
+}
+
+async function acceptFullscreenNagWithFullscreen() {
+  logUi("fullscreen nag accept fullscreen");
+  fullscreenNagFullscreenButton.disabled = true;
+  fullscreenNagFullscreenButton.textContent = "Разворачиваю...";
+  await toggleGameFullscreen();
+  sessionStorage.setItem(FULLSCREEN_NAG_KEY, "1");
+  fullscreenNagDialog.hidden = true;
+  fullscreenNagFullscreenButton.disabled = false;
+  fullscreenNagFullscreenButton.textContent = "Развернуть и продолжить";
+  const action = pendingFullscreenNagAction;
+  pendingFullscreenNagAction = null;
+  action?.();
 }
 
 function renderLevelMenu() {
@@ -418,7 +531,7 @@ function renderLevelMenu() {
     button.innerHTML = `
       <span>${level.badge ?? level.source ?? "Уровень"}</span>
       <strong>${level.title}</strong>
-      <small>${level.source ?? ""}</small>
+      <small class="level-difficulty">${difficultyLine(level)}</small>
     `;
     button.addEventListener("click", () => {
       if (locked) return;
@@ -428,11 +541,11 @@ function renderLevelMenu() {
     });
     if (locked) {
       button.querySelector("span").textContent = "Закрыто";
-      button.querySelector("small").textContent = "пройди предыдущий уровень";
+      button.querySelector("small").innerHTML = difficultyLine(level, "пройди предыдущий");
     }
     if (done) {
       button.querySelector("span").textContent = "Пройден";
-      button.querySelector("small").textContent = `лучшее ${formatTime(done.bestMs)} · смертей ${done.deaths}`;
+      button.querySelector("small").innerHTML = difficultyLine(level, `лучшее ${formatTime(done.bestMs)}`);
     }
     if ((devMode && level.kind === "built-in") || level.kind === "custom") {
       const edit = document.createElement("button");
@@ -538,6 +651,7 @@ function keyCharFromEvent(event) {
 }
 
 async function toggleGameFullscreen() {
+  rememberFullscreenUsed();
   logUi("fullscreen toggle requested", {
     nativeFullscreen: Boolean(document.fullscreenElement),
     fallbackFullscreen: gamePanelEl.classList.contains("is-browser-fullscreen"),
@@ -595,27 +709,36 @@ async function loadBuiltInLevels() {
   try {
     const response = await fetch(`/__list-levels?collection=built-in&ts=${Date.now()}`);
     logUi("built-in level list response", { ok: response.ok, status: response.status });
-    if (!response.ok) return FALLBACK_BUILT_IN_LEVELS;
+    if (!response.ok) return sortBuiltInLevels(FALLBACK_BUILT_IN_LEVELS);
     const data = await response.json();
     logUi("built-in level list payload", { ok: data.ok, count: data.levels?.length ?? 0 });
-    if (!data.ok || !Array.isArray(data.levels) || data.levels.length === 0) return FALLBACK_BUILT_IN_LEVELS;
+    if (!data.ok || !Array.isArray(data.levels) || data.levels.length === 0) return sortBuiltInLevels(FALLBACK_BUILT_IN_LEVELS);
     const levels = await Promise.all(data.levels.map((entry) => importListedLevel(entry, "built-in")));
     const loaded = levels.filter(Boolean);
-    return loaded.length ? sortBuiltInLevels(loaded) : FALLBACK_BUILT_IN_LEVELS;
+    return loaded.length ? sortBuiltInLevels(withExtraBuiltInLevels(loaded)) : sortBuiltInLevels(FALLBACK_BUILT_IN_LEVELS);
   } catch (error) {
     console.warn("[ui] built-in level list failed", error);
-    return FALLBACK_BUILT_IN_LEVELS;
+    return sortBuiltInLevels(FALLBACK_BUILT_IN_LEVELS);
   }
 }
 
 function sortBuiltInLevels(levels) {
-  const order = ["level-one", "level-two", "level-three", "level-four", "level-five", "level-last"];
+  const order = ["level-one", "level-two", "level-three", "level-four", "level-five", "level-last", "labyrinth-impossible-final"];
   return [...levels].sort((a, b) => {
     const ai = order.indexOf(a.fileName);
     const bi = order.indexOf(b.fileName);
     if (ai >= 0 || bi >= 0) return (ai < 0 ? 999 : ai) - (bi < 0 ? 999 : bi);
     return a.fileName.localeCompare(b.fileName, "ru");
   });
+}
+
+function withExtraBuiltInLevels(levels) {
+  const existingIds = new Set(levels.map((level) => level.id));
+  const existingFiles = new Set(levels.map((level) => level.fileName));
+  return [
+    ...levels,
+    ...EXTRA_BUILT_IN_LEVELS.filter((level) => !existingIds.has(level.id) && !existingFiles.has(level.fileName)),
+  ];
 }
 
 function parseLevelFile(text) {

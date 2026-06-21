@@ -70,6 +70,7 @@ export class GameRenderer {
     level.turrets.forEach((turret) => this.painter.turret(turret, pulse));
     level.robots.forEach((robot) => this.painter.robot(robot, pulse));
     level.fliers.forEach((flier) => this.painter.flier(flier, pulse));
+    (level.mazeBots ?? []).forEach((bot) => this.painter.mazeBot(bot, pulse));
     level.mines.forEach((mine) => this.painter.mine(mine, pulse));
     level.wallMines.forEach((mine) => this.painter.wallMine(mine, pulse));
     level.rockets.forEach((rocket) => this.painter.rocket(rocket, pulse));
@@ -128,6 +129,7 @@ export class GameRenderer {
       ...level.triggers,
       ...level.robots,
       ...level.fliers,
+      ...(level.mazeBots ?? []),
       ...level.mines.filter((mine) => mine.active && !mine.exploded),
       ...level.wallMines.filter((mine) => mine.active && !mine.exploded),
       ...level.rockets.filter((rocket) => rocket.active && !rocket.destroyed),
@@ -191,10 +193,23 @@ export class GameRenderer {
     }
     level.slopes.forEach((slope) => this.staticPainter.slope(slope));
 
-    staticCtx.fillStyle = Theme.text;
-    staticCtx.font = "13px Trebuchet MS";
-    level.data.labels.forEach((label) => staticCtx.fillText(label.text, label.x, label.y));
+    (level.data.labels ?? []).forEach((label) => this.drawPixelLabel(staticCtx, label));
     this.staticLevel = level;
+  }
+
+  drawPixelLabel(ctx, label) {
+    const size = Math.max(8, Math.min(32, Number(label.size ?? 13)));
+    const x = Number(label.x ?? 0);
+    const y = Number(label.y ?? 0);
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.font = `900 ${size}px "Courier New", monospace`;
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#020406";
+    ctx.fillText(label.text ?? "", x + 2, y + 2);
+    ctx.fillStyle = label.color ?? Theme.text;
+    ctx.fillText(label.text ?? "", x, y);
+    ctx.restore();
   }
 
   updateCamera(level, player) {

@@ -1,5 +1,5 @@
 export const Level4 = Object.freeze({
-  "name": "Мастер прыжков",
+  "name": "Наклонные поверхности",
   "requiresKeyForExit": true,
   "coinGateRequires": 3,
   "playerTuning": {
@@ -897,5 +897,6 @@ export const Level4 = Object.freeze({
       }
     ],
     "bombs": []
-  }
+  },
+  "difficulty": 3
 });

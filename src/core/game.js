@@ -277,6 +277,142 @@ export class Game {
       flier.y += vector.y * flier.speed;
       this.clampFlierToPatrol(flier);
     });
+    (this.level.mazeBots ?? []).forEach((bot) => this.updateMazeBot(bot));
+  }
+
+  updateMazeBot(bot) {
+    this.rememberMazeBotTile(bot);
+
+    const tileSize = this.config.canvas.tileSize;
+    const centerX = bot.x + bot.w / 2;
+    const centerY = bot.y + bot.h / 2;
+    const cellX = Math.floor(centerX / tileSize);
+    const cellY = Math.floor(centerY / tileSize);
+    const cellCenterX = cellX * tileSize + tileSize / 2;
+    const cellCenterY = cellY * tileSize + tileSize / 2;
+
+    const aligned =
+      Math.abs(centerX - cellCenterX) < 0.35 &&
+      Math.abs(centerY - cellCenterY) < 0.35;
+
+    if (aligned) {
+      bot.x = cellCenterX - bot.w / 2;
+      bot.y = cellCenterY - bot.h / 2;
+
+      if (!Array.isArray(bot.path) || bot.path.length === 0) {
+        bot.path = this.findMazeBotPath(bot);
+        if (!bot.path.length) {
+          bot.visited.clear();
+          bot.lastTileKey = null;
+          bot.path = this.findMazeBotPath(bot, { ignoreVisited: true });
+        }
+      }
+
+      if (bot.path.length) {
+        bot.direction = bot.path.shift();
+      } else {
+        bot.direction = this.oppositeDirection(bot.direction ?? "right");
+      }
+    }
+
+    const direction = bot.direction ?? "right";
+    const vector = this.directionVector(direction);
+
+    const next = {
+      x: bot.x + vector.x * bot.speed,
+      y: bot.y + vector.y * bot.speed,
+      w: bot.w,
+      h: bot.h,
+    };
+
+    const blocked = this.level.obstacleRectsNear(next).some((tile) => rectsOverlap(next, tile));
+    if (blocked) {
+      bot.path = [];
+      bot.direction = this.oppositeDirection(direction);
+      bot.x = cellCenterX - bot.w / 2;
+      bot.y = cellCenterY - bot.h / 2;
+      return;
+    }
+
+    bot.x = next.x;
+    bot.y = next.y;
+
+    if (vector.x !== 0) bot.y = cellCenterY - bot.h / 2;
+    if (vector.y !== 0) bot.x = cellCenterX - bot.w / 2;
+  }
+
+  findMazeBotPath(bot, { ignoreVisited = false } = {}) {
+    const tileSize = this.config.canvas.tileSize;
+    const startX = Math.floor((bot.x + bot.w / 2) / tileSize);
+    const startY = Math.floor((bot.y + bot.h / 2) / tileSize);
+    const startKey = `${startX},${startY}`;
+
+    const queue = [[startX, startY]];
+    const seen = new Set([startKey]);
+    const prev = new Map();
+
+    const dirs = [
+      ["up", 0, -1],
+      ["right", 1, 0],
+      ["down", 0, 1],
+      ["left", -1, 0],
+    ];
+
+    while (queue.length) {
+      const [tx, ty] = queue.shift();
+      const key = `${tx},${ty}`;
+
+      if (key !== startKey) {
+        const visited = bot.visited?.has(key) ?? false;
+        if (this.isMazeBotCellWalkable(tx, ty) && (ignoreVisited || !visited)) {
+          return this.reconstructMazeBotPath(prev, startKey, key);
+        }
+      }
+
+      for (const [direction, dx, dy] of dirs) {
+        const nx = tx + dx;
+        const ny = ty + dy;
+        const nextKey = `${nx},${ny}`;
+
+        if (seen.has(nextKey)) continue;
+        if (!this.isMazeBotCellWalkable(nx, ny)) continue;
+
+        seen.add(nextKey);
+        prev.set(nextKey, { from: key, direction });
+        queue.push([nx, ny]);
+      }
+    }
+
+    return [];
+  }
+
+  reconstructMazeBotPath(prev, startKey, targetKey) {
+    const path = [];
+    let key = targetKey;
+
+    while (key !== startKey) {
+      const step = prev.get(key);
+      if (!step) break;
+      path.push(step.direction);
+      key = step.from;
+    }
+
+    return path.reverse();
+  }
+
+  isMazeBotCellWalkable(tx, ty) {
+    return !this.level.isSolid(tx, ty) && !this.level.slopeAt(tx, ty);
+  }
+
+  rememberMazeBotTile(bot) {
+    const tileSize = this.config.canvas.tileSize;
+    const tx = Math.floor((bot.x + bot.w / 2) / tileSize);
+    const ty = Math.floor((bot.y + bot.h / 2) / tileSize);
+    const key = `${tx},${ty}`;
+    if (bot.lastTileKey === key) return;
+    bot.lastTileKey = key;
+    bot.visited ??= new Map();
+    bot.visited.set(key, (bot.visited.get(key) ?? 0) + 1);
   }
 
   choosePatrolDirection(flier) {
@@ -734,6 +870,10 @@ export class Game {
 
     this.level.fliers.forEach((flier) => {
       if (rectsOverlap(hurtbox, flier)) this.die("Летающий робот шел по своему маршруту. Ты тоже.");
+    });
+
+    (this.level.mazeBots ?? []).forEach((bot) => {
+      if (rectsOverlap(hurtbox, bot)) this.die("Черный робот уже видел этот коридор. Теперь увидел тебя.");
     });
 
     this.level.mines.forEach((mine) => {

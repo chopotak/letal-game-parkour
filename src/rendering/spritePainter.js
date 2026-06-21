@@ -15,6 +15,7 @@ export class SpritePainter {
 
   tile(tile, x, y, pulse) {
     if (tile === "#") this.wall(x, y);
+    if (tile === "U") this.darkWall(x, y);
     if (tile === "S") this.spikes(x, y, pulse);
   }
 
@@ -24,6 +25,14 @@ export class SpritePainter {
     this.ctx.fillRect(x + 3, y + 3, this.tileSize - 6, 5);
     this.ctx.fillStyle = Theme.wallDark;
     this.ctx.fillRect(x + 4, y + this.tileSize - 8, this.tileSize - 8, 4);
+  }
+
+  darkWall(x, y) {
+    this.pixelRect(x, y, this.tileSize, this.tileSize, "#070a10", "#020406");
+    this.ctx.fillStyle = "#161f2d";
+    this.ctx.fillRect(x + 3, y + 3, this.tileSize - 6, 4);
+    this.ctx.fillStyle = "#2f1d35";
+    this.ctx.fillRect(x + 5, y + this.tileSize - 9, this.tileSize - 10, 3);
   }
 
   spikes(x, y, pulse) {
@@ -314,6 +323,24 @@ export class SpritePainter {
     this.ctx.fillStyle = "#071014";
     this.ctx.fillRect(flier.x + 9, flier.y + 11 + bob, 4, 5);
     this.ctx.fillRect(flier.x + flier.w - 13, flier.y + 11 + bob, 4, 5);
+    this.ctx.restore();
+  }
+
+  mazeBot(bot, pulse) {
+    this.ctx.save();
+    this.pixelRect(bot.x, bot.y, bot.w, bot.h, "#020406", "#52eadc");
+    this.ctx.fillStyle = "#05070a";
+    this.ctx.fillRect(bot.x + 3, bot.y + 3, bot.w - 6, bot.h - 6);
+    this.ctx.fillStyle = "#52eadc";
+    if (bot.direction === "left" || bot.direction === "right") {
+      const eyeX = bot.direction === "right" ? bot.x + bot.w - 9 : bot.x + 5;
+      this.ctx.fillRect(eyeX, bot.y + 8, 4, 5);
+      this.ctx.fillRect(eyeX, bot.y + bot.h - 13, 4, 5);
+    } else {
+      const eyeY = bot.direction === "down" ? bot.y + bot.h - 9 : bot.y + 5;
+      this.ctx.fillRect(bot.x + 8, eyeY, 5, 4);
+      this.ctx.fillRect(bot.x + bot.w - 13, eyeY, 5, 4);
+    }
     this.ctx.restore();
   }
 

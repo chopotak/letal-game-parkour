@@ -1,7 +1,7 @@
 export const CustomLevelLast = Object.freeze({
   "name": "Летальность бытия",
   "requiresKeyForExit": true,
-  "coinGateRequires": 6,
+  "coinGateRequires": 3,
   "playerTuning": {
     "tuningScale": 15,
     "speedLevel": 3,
@@ -10,6 +10,7 @@ export const CustomLevelLast = Object.freeze({
     "verticalLevel": 6,
     "wallJumpLevel": 5
   },
+  "difficulty": 5,
   "physicsMode": "moon",
   "physicsOverrides": {
     "moon": {
@@ -24,51 +25,48 @@ export const CustomLevelLast = Object.freeze({
   },
   "map": [
     "##################################################",
-    "#................................................#",
-    "#................................................#",
-    "#..............SS...............SS...............#",
-    "#...........########.........########............#",
-    "#..........##########.......##########...........#",
-    "#...#########......###.....###......###..........#",
-    "#..#########........##..M..##........##..........#",
-    "#..##...............##.....##........##..........#",
-    "#..##...............##.....##........##..........#",
-    "#..##..K............#########........##..........#",
-    "#..##................#######.....................#",
-    "#..##.......................................M....#",
-    "#..########..........................##..........#",
-    "#...########.........................###.........#",
-    "#.........###....................TT...############",
-    "#..........##..........................###########",
-    "#.......M..##......######........................#",
-    "#..........##.....########....TT.................#",
-    "#..TT......##....###....###.................######",
-    "#.......####.....##......##................#######",
-    "#......####......##....M.##......TT.......########",
-    "#.....##.......TT##......##...............###....#",
-    "#.....##.........##......##...............##.....#",
-    "#TT...##.........##......##.........TT....##....D#",
-    "#.....##.........##......##...............##...###",
-    "#.....##..........##.....##.............M.##..####",
-    "#...TT##.....TTT...##..TT###..............##..####",
-    "#.....##...........##.....####.........#####...###",
-    "#......##..........##......####.......######....##",
-    "#.......##.........##.........##.....###...##....#",
-    "#..TT....##.......M##.TT.......########.....##...#",
-    "#.........##########.............#####......###..#",
-    "#..........########.........................###..#",
-    "#........................TT.................###..#",
-    "#........................................P...#...#",
-    "#...........S....S...........................G...#",
+    "##..............................................U#",
+    "##..............................................U#",
+    "##..............................................U#",
+    "##............######.........########...........U#",
+    "#U...........########.......##########..........U#",
+    "#U.....######......###.....###......###.........U#",
+    "#U..########........##..M..##........##..TT.....U#",
+    "##..U...............##.....##........##.........U#",
+    "##..U.###...........##.....##........##......TT.U#",
+    "##..U..K#...........#########........##.........U#",
+    "#U..#.###............#######.............TT.....U#",
+    "#U..#.......................................M...U#",
+    "#U..#######..........................##.........U#",
+    "##..U#######.........................###........U#",
+    "##........###...TT....................############",
+    "##.........##...................#......###########",
+    "#U..#...M..##......######......###............####",
+    "#UT.##.....##.....########......###...........####",
+    "#U...##.SS.##....U##....###......#...........#####",
+    "#U...######UU....##......##.................######",
+    "#U....####UU.....##......U#.TT.............#######",
+    "#U....U#.........##....M.U#...............###....#",
+    "#UT...U#.........U#......U#...............##.....#",
+    "#U....U#......TT.U#.TT...U#....TT...#.....##....D#",
+    "#U....U#.........U#......U#........###....##...###",
+    "#U....U#..TT......##.....##.........#...M.##..####",
+    "#U...TU#...........#U....###..............##..####",
+    "#U....U#......TT...##....#####.........#####...###",
+    "#U.....##..........##....U#####.......######....##",
+    "#U......##.......M.##....UUUUU##.....###...##....#",
+    "#UT......##........#U..........########.....##...#",
+    "#U........##########.............#####......###..#",
+    "#U.........########.........................###..#",
+    "##.....................TT...................###..#",
+    "###......................................P...#...#",
+    "####..................SSSS...................G...#",
     "##################################################",
     "##################################################",
     "##################################################"
   ],
   "messages": [
-    "Финал не обязан быть справедливым, но обязан быть проходимым.",
-    "Пила идет по расписанию. Твоя задача - не попасть в календарь.",
-    "Лазер помнит твое прошлое положение. Работай над будущим.",
-    "Собери нужные монеты и не верь тем, которые улыбаются слишком дешево."
+    "Пользовательский уровень. Проверяй свои ловушки честно."
   ],
   "labels": [],
   "buttonActions": {},
@@ -81,18 +79,7 @@ export const CustomLevelLast = Object.freeze({
     "saws": [
       {
         "id": "saw0",
-        "tx": 5,
-        "ty": 3,
-        "r": 16,
-        "axis": "y",
-        "spanTiles": 3,
-        "speed": 0.5,
-        "t": 0,
-        "active": true
-      },
-      {
-        "id": "saw1",
-        "tx": 8,
+        "tx": 9,
         "ty": 3,
         "r": 16,
         "axis": "y",
@@ -106,11 +93,11 @@ export const CustomLevelLast = Object.freeze({
     "turrets": [
       {
         "id": "turret0",
-        "tx": 32,
+        "tx": 31,
         "ty": 7,
         "active": true,
         "radiusTiles": 12,
-        "rocketSpeed": 1.57,
+        "rocketSpeed": 0.71,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -124,10 +111,10 @@ export const CustomLevelLast = Object.freeze({
       {
         "id": "turret1",
         "tx": 41,
-        "ty": 18,
+        "ty": 19,
         "active": true,
         "radiusTiles": 12,
-        "rocketSpeed": 1.57,
+        "rocketSpeed": 0.71,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -144,7 +131,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 23,
         "active": true,
         "radiusTiles": 13,
-        "rocketSpeed": 1.57,
+        "rocketSpeed": 0.71,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -192,7 +179,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 8,
         "direction": "right",
         "speed": 1,
-        "areaWidthTiles": 6,
+        "areaWidthTiles": 5,
         "areaHeightTiles": 5
       },
       {
@@ -205,34 +192,250 @@ export const CustomLevelLast = Object.freeze({
         "areaHeightTiles": 1
       }
     ],
+    "mazeBots": [],
     "mines": [],
+    "wallMines": [
+      {
+        "id": "wallMine0",
+        "tx": 15,
+        "ty": 3,
+        "side": "floor",
+        "active": true
+      },
+      {
+        "id": "wallMine1",
+        "tx": 16,
+        "ty": 3,
+        "side": "floor",
+        "active": true
+      },
+      {
+        "id": "wallMine2",
+        "tx": 17,
+        "ty": 3,
+        "side": "floor",
+        "active": true
+      },
+      {
+        "id": "wallMine3",
+        "tx": 32,
+        "ty": 3,
+        "side": "floor",
+        "active": true
+      },
+      {
+        "id": "wallMine4",
+        "tx": 33,
+        "ty": 3,
+        "side": "floor",
+        "active": true
+      },
+      {
+        "id": "wallMine5",
+        "tx": 34,
+        "ty": 3,
+        "side": "floor",
+        "active": true
+      },
+      {
+        "id": "wallMine6",
+        "tx": 29,
+        "ty": 8,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine7",
+        "tx": 36,
+        "ty": 8,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine8",
+        "tx": 29,
+        "ty": 9,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine9",
+        "tx": 36,
+        "ty": 9,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine10",
+        "tx": 29,
+        "ty": 10,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine11",
+        "tx": 36,
+        "ty": 10,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine12",
+        "tx": 10,
+        "ty": 17,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine13",
+        "tx": 10,
+        "ty": 18,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine14",
+        "tx": 27,
+        "ty": 19,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine15",
+        "tx": 27,
+        "ty": 20,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine16",
+        "tx": 27,
+        "ty": 21,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine17",
+        "tx": 27,
+        "ty": 22,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine18",
+        "tx": 27,
+        "ty": 23,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine19",
+        "tx": 27,
+        "ty": 24,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine20",
+        "tx": 27,
+        "ty": 25,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine21",
+        "tx": 45,
+        "ty": 26,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine22",
+        "tx": 45,
+        "ty": 27,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine23",
+        "tx": 47,
+        "ty": 33,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine24",
+        "tx": 11,
+        "ty": 34,
+        "side": "ceiling",
+        "active": true
+      },
+      {
+        "id": "wallMine25",
+        "tx": 12,
+        "ty": 34,
+        "side": "ceiling",
+        "active": true
+      },
+      {
+        "id": "wallMine26",
+        "tx": 17,
+        "ty": 34,
+        "side": "ceiling",
+        "active": true
+      },
+      {
+        "id": "wallMine27",
+        "tx": 18,
+        "ty": 34,
+        "side": "ceiling",
+        "active": true
+      },
+      {
+        "id": "wallMine28",
+        "tx": 47,
+        "ty": 34,
+        "side": "left",
+        "active": true
+      }
+    ],
     "lasers": [
       {
         "id": "laser0",
-        "tx": 20,
-        "ty": 24,
+        "tx": 14,
+        "ty": 7,
         "active": true,
-        "radiusTiles": 8,
+        "radiusTiles": 15,
         "chargeMs": 2000,
         "fireMs": 230,
         "cooldownMs": 850
       },
       {
         "id": "laser1",
-        "tx": 29,
-        "ty": 26,
+        "tx": 20,
+        "ty": 20,
         "active": true,
-        "radiusTiles": 14,
+        "radiusTiles": 12,
         "chargeMs": 2000,
         "fireMs": 230,
         "cooldownMs": 850
       },
       {
         "id": "laser2",
-        "tx": 6,
-        "ty": 32,
+        "tx": 2,
+        "ty": 26,
         "active": true,
         "radiusTiles": 8,
+        "chargeMs": 2000,
+        "fireMs": 230,
+        "cooldownMs": 850
+      },
+      {
+        "id": "laser3",
+        "tx": 29,
+        "ty": 26,
+        "active": true,
+        "radiusTiles": 14,
         "chargeMs": 2000,
         "fireMs": 230,
         "cooldownMs": 850
@@ -241,37 +444,37 @@ export const CustomLevelLast = Object.freeze({
     "slopes": [
       {
         "id": "slope0",
-        "tx": 11,
+        "tx": 2,
+        "ty": 1,
+        "rotation": 180,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope1",
+        "tx": 13,
         "ty": 4,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope1",
+        "id": "slope2",
         "tx": 20,
         "ty": 4,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope2",
+        "id": "slope3",
         "tx": 28,
         "ty": 4,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope3",
+        "id": "slope4",
         "tx": 37,
         "ty": 4,
         "rotation": 90,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope4",
-        "tx": 10,
-        "ty": 5,
-        "rotation": 0,
         "sizeTiles": 1
       },
       {
@@ -297,7 +500,7 @@ export const CustomLevelLast = Object.freeze({
       },
       {
         "id": "slope8",
-        "tx": 3,
+        "tx": 6,
         "ty": 6,
         "rotation": 0,
         "sizeTiles": 1
@@ -388,487 +591,548 @@ export const CustomLevelLast = Object.freeze({
       },
       {
         "id": "slope21",
-        "tx": 3,
-        "ty": 14,
-        "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope22",
         "tx": 12,
         "ty": 14,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope23",
+        "id": "slope22",
         "tx": 9,
+        "ty": 15,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope23",
+        "tx": 37,
         "ty": 15,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
         "id": "slope24",
-        "tx": 37,
-        "ty": 15,
-        "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope25",
         "tx": 10,
         "ty": 16,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
+        "id": "slope25",
+        "tx": 31,
+        "ty": 16,
+        "rotation": 0,
+        "sizeTiles": 1
+      },
+      {
         "id": "slope26",
+        "tx": 33,
+        "ty": 16,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope27",
         "tx": 38,
         "ty": 16,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope27",
-        "tx": 18,
-        "ty": 17,
-        "rotation": 0,
-        "sizeTiles": 1
-      },
-      {
         "id": "slope28",
-        "tx": 25,
+        "tx": 5,
         "ty": 17,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
         "id": "slope29",
+        "tx": 18,
+        "ty": 17,
+        "rotation": 0,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope30",
+        "tx": 25,
+        "ty": 17,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope31",
+        "tx": 34,
+        "ty": 17,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope32",
+        "tx": 45,
+        "ty": 17,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope33",
+        "tx": 6,
+        "ty": 18,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope34",
         "tx": 17,
         "ty": 18,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope30",
+        "id": "slope35",
         "tx": 26,
         "ty": 18,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope31",
+        "id": "slope36",
+        "tx": 31,
+        "ty": 18,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope37",
+        "tx": 45,
+        "ty": 18,
+        "rotation": 0,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope38",
+        "tx": 4,
+        "ty": 19,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope39",
+        "tx": 7,
+        "ty": 19,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope40",
         "tx": 10,
         "ty": 19,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope32",
+        "id": "slope41",
         "tx": 20,
         "ty": 19,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope33",
+        "id": "slope42",
         "tx": 23,
         "ty": 19,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope34",
-        "tx": 43,
+        "id": "slope43",
+        "tx": 32,
+        "ty": 19,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope44",
+        "tx": 34,
+        "ty": 19,
+        "rotation": 180,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope45",
+        "tx": 44,
         "ty": 19,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope35",
-        "tx": 7,
-        "ty": 20,
-        "rotation": 0,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope36",
-        "tx": 12,
-        "ty": 20,
-        "rotation": 180,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope37",
+        "id": "slope46",
         "tx": 19,
         "ty": 20,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope38",
+        "id": "slope47",
         "tx": 24,
         "ty": 20,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope39",
-        "tx": 42,
+        "id": "slope48",
+        "tx": 43,
         "ty": 20,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope40",
-        "tx": 6,
+        "id": "slope49",
+        "tx": 5,
+        "ty": 21,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope50",
+        "tx": 42,
         "ty": 21,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope41",
-        "tx": 11,
-        "ty": 21,
-        "rotation": 180,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope42",
+        "id": "slope51",
         "tx": 8,
         "ty": 22,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope43",
+        "id": "slope52",
         "tx": 45,
         "ty": 22,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope44",
+        "id": "slope53",
         "tx": 44,
         "ty": 23,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope45",
+        "id": "slope54",
+        "tx": 35,
+        "ty": 24,
+        "rotation": 0,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope55",
+        "tx": 37,
+        "ty": 24,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope56",
         "tx": 19,
         "ty": 25,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope46",
+        "id": "slope57",
         "tx": 46,
         "ty": 25,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope47",
+        "id": "slope58",
         "tx": 17,
         "ty": 26,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope48",
+        "id": "slope59",
         "tx": 20,
         "ty": 26,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope49",
+        "id": "slope60",
         "tx": 27,
         "ty": 26,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope50",
+        "id": "slope61",
+        "tx": 35,
+        "ty": 26,
+        "rotation": 270,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope62",
+        "tx": 37,
+        "ty": 26,
+        "rotation": 180,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope63",
         "tx": 18,
         "ty": 27,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope51",
+        "id": "slope64",
         "tx": 28,
         "ty": 27,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope52",
+        "id": "slope65",
         "tx": 8,
         "ty": 28,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope53",
-        "tx": 25,
-        "ty": 28,
-        "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope54",
+        "id": "slope66",
         "tx": 30,
         "ty": 28,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope55",
+        "id": "slope67",
         "tx": 38,
         "ty": 28,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope56",
+        "id": "slope68",
         "tx": 46,
         "ty": 28,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope57",
+        "id": "slope69",
         "tx": 6,
         "ty": 29,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope58",
+        "id": "slope70",
         "tx": 9,
         "ty": 29,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope59",
-        "tx": 26,
-        "ty": 29,
-        "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope60",
+        "id": "slope71",
         "tx": 31,
         "ty": 29,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope61",
+        "id": "slope72",
         "tx": 37,
         "ty": 29,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope62",
+        "id": "slope73",
         "tx": 44,
         "ty": 29,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope63",
+        "id": "slope74",
         "tx": 47,
         "ty": 29,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope64",
+        "id": "slope75",
         "tx": 7,
         "ty": 30,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope65",
+        "id": "slope76",
         "tx": 10,
         "ty": 30,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope66",
-        "tx": 29,
-        "ty": 30,
-        "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope67",
+        "id": "slope77",
         "tx": 40,
         "ty": 30,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope68",
+        "id": "slope78",
         "tx": 42,
         "ty": 30,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope69",
+        "id": "slope79",
         "tx": 45,
         "ty": 30,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope70",
+        "id": "slope80",
         "tx": 48,
         "ty": 30,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope71",
+        "id": "slope81",
         "tx": 8,
         "ty": 31,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope72",
+        "id": "slope82",
         "tx": 30,
         "ty": 31,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope73",
+        "id": "slope83",
         "tx": 39,
         "ty": 31,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope74",
+        "id": "slope84",
         "tx": 43,
         "ty": 31,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope75",
+        "id": "slope85",
         "tx": 46,
         "ty": 31,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope76",
+        "id": "slope86",
         "tx": 9,
         "ty": 32,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope77",
+        "id": "slope87",
         "tx": 20,
         "ty": 32,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope78",
+        "id": "slope88",
         "tx": 32,
         "ty": 32,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope79",
+        "id": "slope89",
         "tx": 38,
         "ty": 32,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope80",
+        "id": "slope90",
         "tx": 10,
         "ty": 33,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope81",
+        "id": "slope91",
         "tx": 19,
         "ty": 33,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope82",
+        "id": "slope92",
+        "tx": 2,
+        "ty": 34,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope93",
+        "tx": 3,
+        "ty": 35,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope94",
         "tx": 44,
         "ty": 35,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope83",
+        "id": "slope95",
         "tx": 46,
         "ty": 35,
         "rotation": 180,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope96",
+        "tx": 4,
+        "ty": 36,
+        "rotation": 90,
         "sizeTiles": 1
       }
     ],
     "bombs": [
       {
         "id": "bomb0",
-        "tx": 4,
-        "ty": 15,
+        "tx": 14,
+        "ty": 36,
         "active": true
       },
       {
         "id": "bomb1",
-        "tx": 6,
-        "ty": 15,
-        "active": true
-      },
-      {
-        "id": "bomb2",
-        "tx": 8,
-        "ty": 15,
-        "active": true
-      },
-      {
-        "id": "bomb3",
-        "tx": 27,
-        "ty": 19,
-        "active": true
-      },
-      {
-        "id": "bomb4",
-        "tx": 27,
-        "ty": 21,
-        "active": true
-      },
-      {
-        "id": "bomb5",
-        "tx": 27,
-        "ty": 23,
-        "active": true
-      },
-      {
-        "id": "bomb6",
-        "tx": 27,
-        "ty": 25,
+        "tx": 15,
+        "ty": 36,
         "active": true
       }
     ]

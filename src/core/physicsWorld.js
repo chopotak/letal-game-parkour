@@ -261,7 +261,7 @@ export class PhysicsWorld {
       w: actor.w,
       h: actor.h - 6,
     };
-    return level.solidRectsNear(probe).some((tile) => rectsOverlap(probe, tile) && !this.tileNearSlope(level, tile));
+    return level.solidRectsNear(probe).some((tile) => tile.tile !== "U" && rectsOverlap(probe, tile) && !this.tileNearSlope(level, tile));
   }
 
   resolveSlopes(actor, level, physics, options = {}) {
@@ -479,12 +479,12 @@ export class PhysicsWorld {
         if (actor.vx > 0) {
           actor.x = tile.x - actor.w;
           actor.wallImpactVx = actor.vx;
-          if (!this.tileNearSlope(level, tile)) actor.touchingWall = 1;
+          if (tile.tile !== "U" && !this.tileNearSlope(level, tile)) actor.touchingWall = 1;
         }
         if (actor.vx < 0) {
           actor.x = tile.x + tile.w;
           actor.wallImpactVx = actor.vx;
-          if (!this.tileNearSlope(level, tile)) actor.touchingWall = -1;
+          if (tile.tile !== "U" && !this.tileNearSlope(level, tile)) actor.touchingWall = -1;
         }
         actor.vx = 0;
       } else {

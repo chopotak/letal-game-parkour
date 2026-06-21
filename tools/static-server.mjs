@@ -89,11 +89,23 @@ async function listLevels(response, collection) {
           title: titleFromFileName(fileName),
           exportName: exportNameFromFileName(fileName),
         };
-      })
+      });
+
+    if (collection === "built-in" && !files.some((entry) => entry.fileName === "labyrinth-impossible-final")) {
+      files.push({
+        id: "built-in-labyrinth-impossible-final",
+        fileName: "labyrinth-impossible-final",
+        path: "/src/levels/custom/labyrinth-impossible-final.js",
+        title: "Labyrinth Impossible Final",
+        exportName: "LayrinthImpossibleFinal",
+      });
+    }
+
+    const levels = files
       .sort((a, b) => a.fileName.localeCompare(b.fileName, "ru"));
 
     response.writeHead(200, { "content-type": "application/json; charset=utf-8" });
-    response.end(JSON.stringify({ ok: true, collection, levels: files }));
+    response.end(JSON.stringify({ ok: true, collection, levels }));
   } catch (error) {
     response.writeHead(500, { "content-type": "application/json; charset=utf-8" });
     response.end(JSON.stringify({ ok: false, error: error.message, levels: [] }));

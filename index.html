@@ -16,7 +16,7 @@
             <h1 id="topTitle">Смертельный паркурчик</h1>
           </div>
           <div class="stats">
-            <span>Пауза - TAB</span>
+            <button id="topPauseButton" class="top-pause-button" type="button">Пауза <small>TAB</small></button>
             <span id="deathCount">Смерти: 0</span>
             <span id="timer">00:00</span>
           </div>
@@ -42,22 +42,33 @@
                     <strong>Играть</strong>
                     <small>уровни открываются по порядку</small>
                   </button>
-                  <button id="customLevelsButton" class="menu-tile" type="button">
-                    <span>дополнительно</span>
-                    <strong id="customLevelStatus">src/levels/custom</strong>
-                    <small>твои сохранённые карты</small>
+                  <button id="instructionButton" class="menu-tile instruction-tile" type="button">
+                    <span>сначала сюда</span>
+                    <strong>Инструкция</strong>
+                    <small>управление, замки, редактор</small>
                   </button>
                   <button id="gameFullscreenButton" class="menu-tile fullscreen-tile" type="button">
-                    <span>рекомендовано</span>
-                    <strong>Играть на весь экран</strong>
-                    <small>лучше видно ловушки и прыжки</small>
-                  </button>
-                  <button id="editorButton" class="menu-tile utility-tile" type="button">
-                    <span>техническое</span>
-                    <strong>Редактор уровней</strong>
-                    <small>сборка и правка карт</small>
+                    <span>рекомендуется</span>
+                    <strong>На весь экран</strong>
+                    <small>для нормального обзора</small>
                   </button>
                 </div>
+                <details class="menu-tools">
+                  <summary aria-label="Дополнительные инструменты">⚙</summary>
+                  <div class="menu-tools-panel">
+                    <button id="customLevelsButton" class="menu-tile utility-tile" type="button">
+                      <span>свои карты</span>
+                      <strong id="customLevelStatus">src/levels/custom</strong>
+                      <small>загруженные уровни</small>
+                    </button>
+                    <button id="editorButton" class="menu-tile utility-tile" type="button">
+                      <span>техническое</span>
+                      <strong>Редактор уровней</strong>
+                      <small>сборка и правка карт</small>
+                    </button>
+                  </div>
+                </details>
+                <span class="menu-version">beta v0.2.0</span>
               </div>
               <div id="menuLevels" class="menu-view" hidden>
                 <div class="menu-list-head">
@@ -69,6 +80,35 @@
                   <button id="levelListPlayButton" class="menu-action play-selected-button" type="button">Запустить <small>Enter</small></button>
                 </div>
                 <div id="levelSelect" class="level-select" aria-label="Выбор уровня"></div>
+              </div>
+            </div>
+          </div>
+          <div id="instructionDialog" class="overlay instruction-dialog" hidden>
+            <div class="instruction-window">
+              <p class="menu-kicker">инструкция</p>
+              <h2>Перед забегом</h2>
+              <div class="instruction-grid">
+                <span>W / Space</span><p>прыжок, удержание дает более высокий прыжок</p>
+                <span>A / D</span><p>разгон, инерция и управление в воздухе</p>
+                <span>Стены</span><p>обычные стены дают зацеп, темные стены - нет</p>
+                <span>Уровни</span><p>следующий открывается после прохождения предыдущего</p>
+                <span>TAB</span><p>пауза, рестарт, fullscreen и технические кнопки</p>
+              </div>
+              <button id="instructionCloseButton" class="menu-action" type="button">Понял, к лабиринту</button>
+            </div>
+          </div>
+          <div id="fullscreenNagDialog" class="overlay fullscreen-nag-dialog" hidden>
+            <div class="fullscreen-nag-window">
+              <p class="menu-kicker">серьезно?</p>
+              <h2>Без полного экрана?</h2>
+              <p>
+                Вы уверены что хотите начать играть так и не воспользовавшись полноэкранным режимом
+                <b>КОТОРЫЙ ПОДСВЕЧИВАЕТ КРАСНАЯ НАДПИСЬ НАПРИМЕР???</b>
+                <b>КОТОРЫЙ Я РАЗРАБАТЫВАЛ ПРОСТО ТАК???</b>
+              </p>
+              <div class="fullscreen-nag-actions">
+                <button id="fullscreenNagFullscreenButton" class="menu-action fullscreen-nag-primary" type="button">Развернуть и продолжить</button>
+                <button id="fullscreenNagCloseButton" class="menu-action fullscreen-nag-close" type="button" disabled>Подожди 5</button>
               </div>
             </div>
           </div>
@@ -88,7 +128,7 @@
                 <span>R</span><p>рестарт</p>
                 <span>J</span><p>лимит отрисовки</p>
                 <span>K</span><p>диагностика</p>
-                <span>Esc</span><p>пауза</p>
+                <span>TAB</span><p>пауза</p>
               </div>
               <div class="win-pause-section">
                 <p class="win-pause-title">Уровень пройден</p>

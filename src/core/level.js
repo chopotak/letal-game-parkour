@@ -17,6 +17,7 @@ export class Level {
     this.turrets = (hazards.turrets ?? []).map((turret) => this.createTurret(turret));
     this.robots = (hazards.robots ?? []).map((robot) => this.createRobot(robot));
     this.fliers = (hazards.fliers ?? []).map((flier) => this.createFlier(flier));
+    this.mazeBots = (hazards.mazeBots ?? []).map((bot) => this.createMazeBot(bot));
     this.mines = (hazards.mines ?? []).map((mine) => this.createMine(mine));
     this.wallMines = (hazards.wallMines ?? []).map((mine) => this.createWallMine(mine));
     this.lasers = (hazards.lasers ?? []).map((laser) => this.createLaser(laser));
@@ -181,6 +182,30 @@ export class Level {
       areaHeightTiles,
       patrol,
     };
+  }
+
+  createMazeBot(bot) {
+    return {
+      ...bot,
+      x: bot.tx * this.tileSize + 3,
+      y: bot.ty * this.tileSize + 3,
+      spawnX: bot.tx * this.tileSize + 3,
+      spawnY: bot.ty * this.tileSize + 3,
+      w: this.tileSize - 6,
+      h: this.tileSize - 6,
+      direction: bot.direction ?? "right",
+      initialDirection: bot.direction ?? "right",
+      speed: bot.speed ?? 0.72,
+      visited: new Map(),
+      lastTileKey: null,
+      path: [],
+    };
+  }
+
+  resetMazeBotMemory(bot) {
+    bot.visited = new Map();
+    bot.lastTileKey = null;
+    bot.path = [];
   }
 
   createMine(mine) {
@@ -449,6 +474,10 @@ export class Level {
           this.bombs.push(this.createBomb({ id: `bomb${this.bombs.length}`, tx, ty, active: true }));
           this.rows[ty][tx] = ".";
         }
+        if (tile === "J") {
+          this.mazeBots.push(this.createMazeBot({ id: `mazeBot${this.mazeBots.length}`, tx, ty, direction: "right", speed: 0.72 }));
+          this.rows[ty][tx] = ".";
+        }
         if (tile === "W") {
           this.wallMines.push(this.createWallMine({ id: `wallMine${this.wallMines.length}`, tx, ty, side: "floor", active: true }));
           this.rows[ty][tx] = ".";
@@ -510,6 +539,13 @@ export class Level {
       flier.x = flier.spawnX;
       flier.y = flier.spawnY;
       flier.direction = flier.initialDirection;
+    });
+    this.mazeBots.forEach((bot) => {
+      bot.path = [];
+      bot.x = bot.spawnX;
+      bot.y = bot.spawnY;
+      bot.direction = bot.initialDirection;
+      this.resetMazeBotMemory(bot);
     });
     this.mines.forEach((mine) => {
       mine.active = mine.initialActive;
@@ -583,7 +619,7 @@ export class Level {
   }
 
   isSolid(tx, ty) {
-    return this.tileAt(tx, ty) === "#" || this.tileAt(tx, ty) === "F";
+    return this.tileAt(tx, ty) === "#" || this.tileAt(tx, ty) === "F" || this.tileAt(tx, ty) === "U";
   }
 
   solidRectsNear(rect) {

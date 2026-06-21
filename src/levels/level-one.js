@@ -170,5 +170,6 @@ export const LevelOne = Object.freeze({
         "active": true
       }
     ]
-  }
+  },
+  "difficulty": 1
 });

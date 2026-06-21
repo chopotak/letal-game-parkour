@@ -10,6 +10,7 @@ const DEFAULT_LEVEL_FILE = "custom-level";
 const DEFAULT_SETTINGS = Object.freeze({
   tuningScale: 15,
   levelName: "Пользовательский уровень",
+  difficulty: 1,
   speedLevel: 14,
   jumpLevel: 14,
   accelerationLevel: 10,
@@ -33,12 +34,16 @@ const DEFAULT_SETTINGS = Object.freeze({
   flierDirection: "right",
   flierAreaWidthTiles: 6,
   flierAreaHeightTiles: 4,
+  mazeBotSpeed: 0.72,
+  mazeBotDirection: "right",
   wallMineSide: "floor",
   triggerWidthTiles: 3,
   triggerHeightTiles: 3,
   textZoneWidthTiles: 5,
   textZoneHeightTiles: 3,
   textZoneText: "Здесь будет текст подсказки.",
+  visualText: "ХАЛЯВА",
+  visualTextSize: 13,
   activateRockets: true,
   activateSaws: true,
   activateHiddenSpikes: true,
@@ -87,6 +92,7 @@ const TOOLS = [
   { id: "Y", label: "Склон 45", category: "Карта", color: "#52eadc" },
   { id: ".", label: "Пусто", category: "Карта", color: "#101821" },
   { id: "#", label: "Стена", category: "Карта", color: "#26364a" },
+  { id: "U", label: "Темная стена", category: "Карта", color: "#070a10" },
   { id: "P", label: "Старт", category: "Карта", color: "#71f79f", unique: true },
   { id: "D", label: "Финиш", category: "Карта", color: "#71f79f", unique: true },
   { id: "G", label: "Проход 3 монеты", category: "Карта", color: "#ffd15c" },
@@ -96,6 +102,7 @@ const TOOLS = [
   { id: "M", label: "Монета прохода", category: "Пикапы", color: "#ffd15c" },
   { id: "B", label: "Кнопка", category: "События", color: "#ffd15c" },
   { id: "Z", label: "Триггер", category: "События", color: "#b583ff" },
+  { id: "A", label: "Текст", category: "Декор", color: "#ffd15c" },
   { id: "S", label: "Шипы", category: "Ловушки", color: "#ff4c6a" },
   { id: "H", label: "Скрытые шипы", category: "Ловушки", color: "#ff7b93" },
   { id: "F", label: "Падающий блок", category: "Ловушки", color: "#7b8ea7" },
@@ -105,6 +112,7 @@ const TOOLS = [
   { id: "I", label: "Мина", category: "Ловушки", color: "#ff4c6a" },
   { id: "W", label: "Настенная мина", category: "Ловушки", color: "#ff7b93" },
   { id: "Q", label: "Летающий робот", category: "Ловушки", color: "#b583ff" },
+  { id: "J", label: "Черный робот", category: "Ловушки", color: "#05070a" },
   { id: "R", label: "Турель", category: "Ловушки", color: "#ff4c6a" },
   { id: "L", label: "Лазер", category: "Ловушки", color: "#52eadc" },
   { id: "X", label: "Бомба", category: "Ловушки", color: "#0b1018" },
@@ -112,7 +120,7 @@ const TOOLS = [
 ];
 
 const TOOL_BY_ID = new Map(TOOLS.map((tool) => [tool.id, tool]));
-const META_TOOLS = new Set(["O", "R", "L", "H", "Z", "V", "B", "G", "Y", "N", "Q", "W"]);
+const META_TOOLS = new Set(["O", "R", "L", "H", "Z", "V", "B", "G", "Y", "N", "Q", "J", "W", "A"]);
 
 export class LevelEditor {
   constructor({ canvas, paletteEl, settingsEl, modeButtons, undoButton, redoButton, statusEl, widthInput, heightInput, resizeButton }) {
@@ -994,6 +1002,13 @@ export class LevelEditor {
         areaHeightTiles: this.settings.flierAreaHeightTiles,
       };
     }
+    if (value === "J") {
+      return {
+        type: "mazeBot",
+        direction: this.settings.mazeBotDirection,
+        speed: this.settings.mazeBotSpeed,
+      };
+    }
     if (value === "L") {
       return {
         type: "laser",
@@ -1034,6 +1049,13 @@ export class LevelEditor {
         wTiles: this.settings.textZoneWidthTiles,
         hTiles: this.settings.textZoneHeightTiles,
         text: this.settings.textZoneText,
+      };
+    }
+    if (value === "A") {
+      return {
+        type: "label",
+        text: this.settings.visualText,
+        size: this.settings.visualTextSize,
       };
     }
     if (value === "Z" || value === "B") {
@@ -1230,12 +1252,14 @@ export class LevelEditor {
       cameraStartOffsetX: levelData.camera?.startOffsetX ?? DEFAULT_SETTINGS.cameraStartOffsetX,
       cameraStartOffsetY: levelData.camera?.startOffsetY ?? DEFAULT_SETTINGS.cameraStartOffsetY,
       physicsMode: levelData.physicsMode ?? DEFAULT_SETTINGS.physicsMode,
+      difficulty: Math.max(1, Math.min(5, Number(levelData.difficulty ?? DEFAULT_SETTINGS.difficulty))),
       physicsOverrides: this.clone(levelData.physicsOverrides ?? {}),
     };
 
     this.importHazards(levelData.hazards ?? {});
     this.importTriggers(levelData.triggers ?? []);
     this.importTextZones(levelData.textZones ?? []);
+    this.importLabels(levelData.labels ?? []);
     this.importButtonMetadata(levelData.buttonActions ?? {});
     this.pruneMeta();
     this.selectedTile = null;
@@ -1296,6 +1320,13 @@ export class LevelEditor {
         speed: flier.speed ?? 0.8,
         areaWidthTiles: flier.areaWidthTiles ?? 6,
         areaHeightTiles: flier.areaHeightTiles ?? 4,
+      });
+    });
+    (hazards.mazeBots ?? []).forEach((bot) => {
+      this.placeImportedMeta(bot.tx, bot.ty, "J", {
+        type: "mazeBot",
+        direction: bot.direction ?? "right",
+        speed: bot.speed ?? 0.72,
       });
     });
     (hazards.mines ?? []).forEach((mine) => {
@@ -1365,6 +1396,19 @@ export class LevelEditor {
     });
   }
 
+  importLabels(labels) {
+    labels.forEach((label) => {
+      const size = Math.max(8, Math.min(32, Number(label.size ?? 13)));
+      const tx = Math.min(this.width - 2, Math.max(1, Math.round(Number(label.x ?? 0) / this.baseTile)));
+      const ty = Math.min(this.height - 4, Math.max(1, Math.round((Number(label.y ?? 0) - size) / this.baseTile)));
+      this.placeImportedMeta(tx, ty, "A", {
+        type: "label",
+        text: label.text ?? "",
+        size,
+      });
+    });
+  }
+
   importButtonMetadata(buttonActions) {
     let index = 0;
     for (let y = 0; y < this.height; y += 1) {
@@ -1403,6 +1447,7 @@ export class LevelEditor {
       turrets: [],
       robots: [],
       fliers: [],
+      mazeBots: [],
       mines: [],
       wallMines: [],
       lasers: [],
@@ -1411,6 +1456,7 @@ export class LevelEditor {
     };
     const triggers = [];
     const textZones = [];
+    const labels = [];
     const rawTriggers = [];
     const buttonMetas = [];
     const ids = {
@@ -1485,6 +1531,17 @@ export class LevelEditor {
             speed: Number(meta.speed ?? 0.8),
             areaWidthTiles: Math.max(1, Number(meta.areaWidthTiles ?? 6)),
             areaHeightTiles: Math.max(1, Number(meta.areaHeightTiles ?? 4)),
+          });
+          map[y][x] = ".";
+        }
+
+        if (tile === "J") {
+          hazards.mazeBots.push({
+            id: `mazeBot${hazards.mazeBots.length}`,
+            tx: x,
+            ty: y,
+            direction: meta.direction ?? "right",
+            speed: Number(meta.speed ?? 0.72),
           });
           map[y][x] = ".";
         }
@@ -1582,6 +1639,17 @@ export class LevelEditor {
           });
           map[y][x] = ".";
         }
+
+        if (tile === "A") {
+          const size = Math.max(8, Math.min(32, Number(meta.size ?? 13)));
+          labels.push({
+            text: String(meta.text ?? ""),
+            x: x * this.baseTile,
+            y: y * this.baseTile + size,
+            size,
+          });
+          map[y][x] = ".";
+        }
       }
     }
 
@@ -1618,6 +1686,7 @@ export class LevelEditor {
         verticalLevel: this.settings.verticalLevel,
         wallJumpLevel: this.settings.wallJumpLevel,
       },
+      difficulty: Math.max(1, Math.min(5, Number(this.settings.difficulty ?? 1))),
       physicsMode: this.settings.physicsMode,
       physicsOverrides: this.clone(this.settings.physicsOverrides ?? {}),
       camera: {
@@ -1628,7 +1697,7 @@ export class LevelEditor {
       },
       map: map.map((row) => row.join("")),
       messages: ["Пользовательский уровень. Проверяй свои ловушки честно."],
-      labels: [],
+      labels,
       buttonActions,
       coinActions: {},
       onKey: {},
@@ -1691,7 +1760,7 @@ export class LevelEditor {
     }
 
     if (JSON.stringify(this.snapshot()) !== before) this.commitHistory();
-    this.renderSettings();
+    if (target.type !== "text") this.renderSettings();
     this.draw();
   }
 
@@ -1742,6 +1811,7 @@ export class LevelEditor {
       <div class="settings-section">
         <h3>Уровень</h3>
         ${this.textControl("Название", "levelName", this.settings.levelName)}
+        ${this.rangeControl("Сложность", "difficulty", 1, 5, 1, this.settings.difficulty)}
       </div>
       <div class="settings-section">
         <h3>Физика уровня</h3>
@@ -1789,6 +1859,8 @@ export class LevelEditor {
       robotCooldownFrames: settings.robotCooldownFrames ?? DEFAULT_SETTINGS.robotCooldownFrames,
       flierAreaWidthTiles: settings.flierAreaWidthTiles ?? DEFAULT_SETTINGS.flierAreaWidthTiles,
       flierAreaHeightTiles: settings.flierAreaHeightTiles ?? DEFAULT_SETTINGS.flierAreaHeightTiles,
+      mazeBotSpeed: settings.mazeBotSpeed ?? DEFAULT_SETTINGS.mazeBotSpeed,
+      mazeBotDirection: settings.mazeBotDirection ?? DEFAULT_SETTINGS.mazeBotDirection,
     };
   }
 
@@ -1867,6 +1939,17 @@ export class LevelEditor {
       `;
     }
 
+    if (this.activeTool === "J") {
+      return `
+        <div class="settings-section">
+          <h3>Черный робот</h3>
+          ${this.selectControl("Старт", "mazeBotDirection", this.settings.mazeBotDirection, [["right", "вправо"], ["up", "вверх"], ["left", "влево"], ["down", "вниз"]])}
+          ${this.numberControl("Скорость", "mazeBotSpeed", 0.2, 3, 0.1, this.settings.mazeBotSpeed)}
+          <p>Бродит по лабиринту и выбирает менее посещенные коридоры.</p>
+        </div>
+      `;
+    }
+
     if (this.activeTool === "W") {
       return `
         <div class="settings-section">
@@ -1897,6 +1980,17 @@ export class LevelEditor {
           ${this.numberControl("Ширина зоны", "textZoneWidthTiles", 1, 30, 1, this.settings.textZoneWidthTiles)}
           ${this.numberControl("Высота зоны", "textZoneHeightTiles", 1, 30, 1, this.settings.textZoneHeightTiles)}
           ${this.textControl("Текст", "textZoneText", this.settings.textZoneText)}
+        </div>
+      `;
+    }
+
+    if (this.activeTool === "A") {
+      return `
+        <div class="settings-section">
+          <h3>Визуальный текст</h3>
+          ${this.textControl("Текст", "visualText", this.settings.visualText)}
+          ${this.numberControl("Размер", "visualTextSize", 8, 32, 1, this.settings.visualTextSize)}
+          <p>Рисуется прямо на карте. Это не подсказка снизу и не коллайдер.</p>
         </div>
       `;
     }
@@ -1988,6 +2082,9 @@ export class LevelEditor {
       controls += this.numberControl("Скорость", "speed", 0.2, 3, 0.1, meta.speed ?? 0.8, "meta");
       controls += this.numberControl("Область X, тайлы", "areaWidthTiles", 1, 30, 1, meta.areaWidthTiles ?? 6, "meta");
       controls += this.numberControl("Область Y, тайлы", "areaHeightTiles", 1, 30, 1, meta.areaHeightTiles ?? 4, "meta");
+    } else if (meta.type === "mazeBot") {
+      controls += this.selectControl("Старт", "direction", meta.direction ?? "right", [["right", "вправо"], ["up", "вверх"], ["left", "влево"], ["down", "вниз"]], "meta");
+      controls += this.numberControl("Скорость", "speed", 0.2, 3, 0.1, meta.speed ?? 0.72, "meta");
     } else if (meta.type === "wallMine") {
       controls += this.selectControl("Клеится к", "side", meta.side ?? "floor", [["floor", "пол"], ["ceiling", "потолок"], ["left", "левая стена"], ["right", "правая стена"]], "meta");
       controls += this.checkControl("Активна сразу", "active", meta.active ?? true, "meta");
@@ -2003,6 +2100,9 @@ export class LevelEditor {
       controls += this.numberControl("Ширина зоны", "wTiles", 1, 30, 1, meta.wTiles ?? 3, "meta");
       controls += this.numberControl("Высота зоны", "hTiles", 1, 30, 1, meta.hTiles ?? 3, "meta");
       controls += this.textControl("Текст", "text", meta.text ?? "", "meta");
+    } else if (meta.type === "label") {
+      controls += this.textControl("Текст", "text", meta.text ?? "", "meta");
+      controls += this.numberControl("Размер", "size", 8, 32, 1, meta.size ?? 13, "meta");
     } else if (meta.type === "trigger" || meta.type === "button") {
       controls += this.renderEventControls(meta.type === "trigger" ? "Триггер" : "Кнопка", "meta", meta);
     }
@@ -2017,13 +2117,19 @@ export class LevelEditor {
 
   rangeControl(label, name, min, max, step, value, mode = "setting") {
     const attr = mode === "meta" ? "data-meta-field" : "data-setting";
+    const valueLabel = name === "difficulty" ? this.pixelStars(value) : `${value}/${max}`;
     return `
-      <label class="setting-row">
+      <label class="setting-row ${name === "difficulty" ? "difficulty-setting-row" : ""}">
         <span>${label}</span>
-        <b>${value}/${max}</b>
+        <b>${valueLabel}</b>
         <input type="range" min="${min}" max="${max}" step="${step}" value="${value}" ${attr}="${name}" />
       </label>
     `;
+  }
+
+  pixelStars(value) {
+    const count = Math.max(1, Math.min(5, Math.round(Number(value) || 1)));
+    return `<span class="pixel-stars editor-stars" aria-label="${count} из 5">${Array.from({ length: count }, () => '<span class="pixel-star"></span>').join("")}</span>`;
   }
 
   rocketTuningForAggression(value) {
@@ -2152,6 +2258,16 @@ export class LevelEditor {
       return;
     }
 
+    if (value === "U") {
+      this.ctx.fillStyle = "#070a10";
+      this.ctx.fillRect(x, y, Math.ceil(tileSize), Math.ceil(tileSize));
+      this.ctx.fillStyle = "#161f2d";
+      this.ctx.fillRect(x + 2, y + 2, tileSize - 4, Math.max(2, tileSize * 0.16));
+      this.ctx.fillStyle = "#2f1d35";
+      this.ctx.fillRect(x + 4, y + tileSize - 7, tileSize - 8, Math.max(2, tileSize * 0.1));
+      return;
+    }
+
     if (value === "Y") {
       const meta = this.meta[this.metaKey(tx, ty)] ?? this.createMetadataForTool("Y");
       this.drawSlopeTile(x, y, tileSize * Math.max(1, Number(meta.sizeTiles ?? 1)), Number(meta.rotation ?? 0));
@@ -2255,6 +2371,17 @@ export class LevelEditor {
       return;
     }
 
+    if (value === "J") {
+      this.ctx.fillStyle = "#020406";
+      this.ctx.fillRect(x + 3, y + 3, tileSize - 6, tileSize - 6);
+      this.ctx.fillStyle = "#05070a";
+      this.ctx.fillRect(x + 7, y + 7, tileSize - 14, tileSize - 14);
+      this.ctx.fillStyle = "#52eadc";
+      this.ctx.fillRect(x + tileSize - 11, y + 9, 4, 5);
+      this.ctx.fillRect(x + tileSize - 11, y + tileSize - 14, 4, 5);
+      return;
+    }
+
     if (value === "R") {
       this.ctx.fillStyle = "#2f4057";
       this.ctx.fillRect(x + 5, y + 7, tileSize - 10, tileSize - 10);
@@ -2275,6 +2402,12 @@ export class LevelEditor {
       this.ctx.fillText("TXT", x + tileSize / 2, y + tileSize / 2 + 1);
       this.ctx.textAlign = "start";
       this.ctx.textBaseline = "alphabetic";
+      return;
+    }
+
+    if (value === "A") {
+      const meta = this.meta[this.metaKey(tx, ty)] ?? this.createMetadataForTool("A");
+      this.drawPixelLabel(this.ctx, meta.text ?? "TXT", x, y + Math.max(8, Number(meta.size ?? 13)), Math.max(8, Number(meta.size ?? 13)));
       return;
     }
 
@@ -2317,6 +2450,18 @@ export class LevelEditor {
     this.ctx.moveTo(points[0].x, points[0].y);
     this.ctx.lineTo(points[1].x, points[1].y);
     this.ctx.stroke();
+  }
+
+  drawPixelLabel(ctx, text, x, y, size = 13, color = "#f4f1dc") {
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.font = `900 ${Math.max(8, Math.min(32, Number(size) || 13))}px "Courier New", monospace`;
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#020406";
+    ctx.fillText(text ?? "", x + 2, y + 2);
+    ctx.fillStyle = color;
+    ctx.fillText(text ?? "", x, y);
+    ctx.restore();
   }
 
   slopePoints(x, y, size, rotation) {
