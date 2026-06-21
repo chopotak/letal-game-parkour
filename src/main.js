@@ -81,6 +81,7 @@ const levelListTitleEl = document.getElementById("levelListTitle");
 const levelListKickerEl = document.getElementById("levelListKicker");
 const levelListPlayButton = document.getElementById("levelListPlayButton");
 const PROGRESS_KEY = "lethality-level-progress";
+const CUSTOM_LEVELS_STORAGE_KEY = "lethality-custom-levels";
 const FULLSCREEN_USED_KEY = "lethality-fullscreen-used";
 const FULLSCREEN_NAG_KEY = "lethality-fullscreen-nag-dismissed";
 const fullscreenNagDialog = document.getElementById("fullscreenNagDialog");
@@ -235,7 +236,11 @@ document.getElementById("editorSaveFileButton").addEventListener("click", async 
   editor.save();
   updateEditorLevel();
   try {
-    await editor.saveLevelModule(fileName, { collection, exportName });
+    if (collection === "custom") {
+      saveCustomLevelToBrowserStorage({ title, fileName, exportName, data: editor.exportLevelData() });
+    } else {
+      await editor.saveLevelModule(fileName, { collection, exportName });
+    }
     updateInMemorySavedLevel({ title, fileName: editor.safeFileName(fileName), collection });
     builtInLevels = await loadBuiltInLevels();
     customLevels = await loadCustomLevels();
@@ -395,6 +400,46 @@ function writeProgress(progress) {
   const json = JSON.stringify(progress);
   localStorage.setItem(PROGRESS_KEY, json);
   document.cookie = `${encodeURIComponent(PROGRESS_KEY)}=${encodeURIComponent(json)}; max-age=31536000; path=/; SameSite=Lax`;
+}
+
+function readCustomLevelsFromBrowserStorage() {
+  try {
+    const saved = localStorage.getItem(CUSTOM_LEVELS_STORAGE_KEY) ?? readCookie(CUSTOM_LEVELS_STORAGE_KEY);
+    const levels = JSON.parse(saved ?? "[]");
+    if (!Array.isArray(levels)) return [];
+    if (saved && !localStorage.getItem(CUSTOM_LEVELS_STORAGE_KEY)) {
+      localStorage.setItem(CUSTOM_LEVELS_STORAGE_KEY, JSON.stringify(levels));
+    }
+    return levels.filter((entry) => entry?.data && Array.isArray(entry.data.map));
+  } catch {
+    return [];
+  }
+}
+
+function writeCustomLevelsToBrowserStorage(levels) {
+  const json = JSON.stringify(levels);
+  localStorage.setItem(CUSTOM_LEVELS_STORAGE_KEY, json);
+  if (encodeURIComponent(json).length < 3800) {
+    document.cookie = `${encodeURIComponent(CUSTOM_LEVELS_STORAGE_KEY)}=${encodeURIComponent(json)}; max-age=31536000; path=/; SameSite=Lax`;
+  }
+}
+
+function saveCustomLevelToBrowserStorage({ title, fileName, exportName, data }) {
+  const safeFileName = editor.safeFileName(fileName);
+  const levels = readCustomLevelsFromBrowserStorage();
+  const next = {
+    id: `custom-${safeFileName}`,
+    title,
+    fileName: safeFileName,
+    exportName: exportName ?? editor.levelExportName(safeFileName),
+    data,
+    updatedAt: Date.now(),
+  };
+  const index = levels.findIndex((level) => level.id === next.id || level.fileName === safeFileName);
+  if (index >= 0) levels[index] = next;
+  else levels.push(next);
+  writeCustomLevelsToBrowserStorage(levels);
+  editor.setStatus(`Уровень сохранен в хранилище сайта: ${safeFileName}.`);
 }
 
 function isLevelUnlocked(levels, index, progress) {
@@ -709,19 +754,41 @@ function updateFullscreenButton() {
 }
 
 async function loadCustomLevels() {
+  const storedLevels = readCustomLevelsFromBrowserStorage().map((entry) => ({
+    id: entry.id,
+    title: entry.data.name ?? entry.title,
+    badge: "Сохраненный",
+    source: entry.fileName,
+    kind: "custom",
+    collection: "custom",
+    fileName: entry.fileName,
+    exportName: entry.exportName ?? null,
+    data: entry.data,
+  }));
   try {
     const response = await fetch(`/__list-levels?ts=${Date.now()}`);
     logUi("custom level list response", { ok: response.ok, status: response.status });
-    if (!response.ok) return [];
+    if (!response.ok) return storedLevels;
     const data = await response.json();
     logUi("custom level list payload", { ok: data.ok, count: data.levels?.length ?? 0 });
-    if (!data.ok || !Array.isArray(data.levels)) return [];
+    if (!data.ok || !Array.isArray(data.levels)) return storedLevels;
     const levels = await Promise.all(data.levels.map((entry) => importCustomLevel(entry)));
-    return levels.filter(Boolean);
+    return mergeCustomLevels(levels.filter(Boolean), storedLevels);
   } catch (error) {
     console.warn("[ui] custom level list failed", error);
-    return [];
+    return storedLevels;
   }
+}
+
+function mergeCustomLevels(serverLevels, storedLevels) {
+  const levels = [...serverLevels];
+  const known = new Set(levels.map((level) => level.id));
+  const knownFiles = new Set(levels.map((level) => level.fileName));
+  storedLevels.forEach((level) => {
+    if (known.has(level.id) || knownFiles.has(level.fileName)) return;
+    levels.push(level);
+  });
+  return levels;
 }
 
 async function loadBuiltInLevels() {
