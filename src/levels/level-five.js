@@ -10,6 +10,7 @@ export const Level5 = Object.freeze({
     "verticalLevel": 6,
     "wallJumpLevel": 5
   },
+  "difficulty": 4,
   "physicsMode": "moon",
   "physicsOverrides": {
     "moon": {
@@ -65,17 +66,39 @@ export const Level5 = Object.freeze({
     "##################################################"
   ],
   "messages": [
-    "Мастер стен проверяет не скорость, а timing. Да, это хуже.",
-    "Стена держит недолго. Дальше начинается честный спуск.",
-    "Если мина мигает, она не здоровается.",
-    "Отталкивайся от другой стены. Одна и та же быстро начинает обижаться."
+    "Идеальное чувство таймингов."
   ],
   "labels": [],
   "buttonActions": {},
   "coinActions": {},
   "onKey": {},
   "triggers": [],
-  "textZones": [],
+  "textZones": [
+    {
+      "id": "textZone0",
+      "tx": 28,
+      "ty": 17,
+      "wTiles": 9,
+      "hTiles": 3,
+      "text": "Не умри тут!"
+    },
+    {
+      "id": "textZone1",
+      "tx": 16,
+      "ty": 23,
+      "wTiles": 9,
+      "hTiles": 3,
+      "text": "Молодцом!"
+    },
+    {
+      "id": "textZone2",
+      "tx": 1,
+      "ty": 32,
+      "wTiles": 13,
+      "hTiles": 5,
+      "text": "Тебе предстоит научится соблюдать тайминг отскока от стен, иначе ты не пройдешь этот уровень."
+    }
+  ],
   "hazards": {
     "hiddenSpikes": [],
     "saws": [],
@@ -83,6 +106,7 @@ export const Level5 = Object.freeze({
     "turrets": [],
     "robots": [],
     "fliers": [],
+    "mazeBots": [],
     "mines": [],
     "wallMines": [
       {
@@ -635,6 +659,5 @@ export const Level5 = Object.freeze({
     "lasers": [],
     "slopes": [],
     "bombs": []
-  },
-  "difficulty": 4
+  }
 });

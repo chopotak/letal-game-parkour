@@ -445,11 +445,24 @@ function saveCustomLevelToBrowserStorage({ title, fileName, exportName, data }) 
 function isLevelUnlocked(levels, index, progress) {
   if (currentLevelList !== "built-in") return true;
   if (index <= 0) return true;
+  if (isPostWallMasterLevel(levels[index])) return Boolean(progress[wallMasterLevelId(levels)]);
   return Boolean(progress[levels[index - 1]?.id]);
 }
 
 function firstUnlockedLevel(levels, progress) {
   return levels.find((level, index) => isLevelUnlocked(levels, index, progress));
+}
+
+function isPostWallMasterLevel(level) {
+  return level?.fileName === "level-last" || level?.fileName === "labyrinth-impossible-final";
+}
+
+function wallMasterLevelId(levels) {
+  return levels.find((level) => level.fileName === "level-five")?.id;
+}
+
+function lockedLevelHint(level) {
+  return isPostWallMasterLevel(level) ? "пройди мастера стен" : "пройди предыдущий";
 }
 
 function saveLevelProgress(detail) {
@@ -605,7 +618,7 @@ function renderLevelMenu() {
     });
     if (locked) {
       button.querySelector("span").textContent = "Закрыто";
-      button.querySelector("small").innerHTML = difficultyLine(level, "пройди предыдущий");
+      button.querySelector("small").innerHTML = difficultyLine(level, lockedLevelHint(level));
     }
     if (done) {
       button.querySelector("span").textContent = "Пройден";

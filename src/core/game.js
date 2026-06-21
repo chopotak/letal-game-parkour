@@ -799,9 +799,9 @@ export class Game {
       this.player.requiredCoins += 1;
       this.level.setCoinGateState(this.player.requiredCoins);
       this.effects.burst(coin.x + 9, coin.y + 10, Theme.coin, 22);
-      const required = this.level.data.coinGateRequires ?? 3;
+      const required = this.level.requiredCoinCount();
       if (this.player.requiredCoins >= required) {
-        this.ui.showMessage("Три одинаковые монеты собраны. Проход открылся.");
+        this.ui.showMessage(`Все нужные монеты собраны: ${this.player.requiredCoins}/${required}. Проход открылся.`);
       } else {
         this.ui.showMessage(`Монета засчитана: ${this.player.requiredCoins}/${required}. Остальные выглядят так же.`);
       }

@@ -92,7 +92,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
     "######################################################################"
   ],
   "messages": [
-    "Пользовательский уровень. Проверяй свои ловушки честно."
+    "Невозможный уровень"
   ],
   "labels": [],
   "buttonActions": {},
@@ -103,10 +103,10 @@ export const LayrinthImpossibleFinal = Object.freeze({
     {
       "id": "textZone0",
       "tx": 39,
-      "ty": 18,
+      "ty": 19,
       "wTiles": 16,
-      "hTiles": 15,
-      "text": "Ракетки3"
+      "hTiles": 14,
+      "text": "Огоо я люблю мансить от ракеток!"
     },
     {
       "id": "textZone1",
@@ -114,15 +114,15 @@ export const LayrinthImpossibleFinal = Object.freeze({
       "ty": 23,
       "wTiles": 12,
       "hTiles": 19,
-      "text": "Ракетки"
+      "text": "Ох уж эти ракетки!"
     },
     {
       "id": "textZone2",
-      "tx": 33,
+      "tx": 34,
       "ty": 43,
       "wTiles": 10,
       "hTiles": 20,
-      "text": "Ракетки2"
+      "text": "Сколько можно мансить от ракеток? XD"
     },
     {
       "id": "textZone3",
@@ -138,7 +138,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
       "ty": 61,
       "wTiles": 5,
       "hTiles": 5,
-      "text": "Тебестоитнайтхощ"
+      "text": "Дальше бога нет."
     }
   ],
   "hazards": {
@@ -186,7 +186,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
         "ty": 23,
         "active": true,
         "radiusTiles": 10,
-        "rocketSpeed": 3.50,
+        "rocketSpeed": 3.5,
         "cooldownFrames": 300,
         "aggression": 1,
         "reactionFrames": 58,
@@ -203,7 +203,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
         "ty": 29,
         "active": true,
         "radiusTiles": 10,
-        "rocketSpeed": 3.50,
+        "rocketSpeed": 3.5,
         "cooldownFrames": 300,
         "aggression": 1,
         "reactionFrames": 58,
@@ -220,7 +220,7 @@ export const LayrinthImpossibleFinal = Object.freeze({
         "ty": 53,
         "active": true,
         "radiusTiles": 10,
-        "rocketSpeed": 3.50,
+        "rocketSpeed": 3.5,
         "cooldownFrames": 300,
         "aggression": 1,
         "reactionFrames": 58,

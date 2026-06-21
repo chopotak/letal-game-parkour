@@ -40,6 +40,7 @@ export class Level {
     this.buttons = [];
     this.springPads = [];
     this.scanMarkers();
+    this.normalizeCoinGateRequirements();
   }
 
   createHiddenSpike(spike) {
@@ -606,6 +607,19 @@ export class Level {
   setCoinGateState(count) {
     this.coinGates.forEach((gate) => {
       gate.open = count >= gate.requiredCount;
+    });
+  }
+
+  requiredCoinCount() {
+    const configured = Number(this.data.coinGateRequires ?? 0);
+    const gateRequired = Math.max(0, ...this.coinGates.map((gate) => Number(gate.requiredCount ?? 0)));
+    return Math.max(1, configured, gateRequired, this.collectibles.requiredCoins.length);
+  }
+
+  normalizeCoinGateRequirements() {
+    const required = this.requiredCoinCount();
+    this.coinGates.forEach((gate) => {
+      gate.requiredCount = Math.max(Number(gate.requiredCount ?? 0), required);
     });
   }
 

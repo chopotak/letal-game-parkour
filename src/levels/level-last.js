@@ -28,8 +28,8 @@ export const CustomLevelLast = Object.freeze({
     "##..............................................U#",
     "##..............................................U#",
     "##..............................................U#",
-    "##............######.........########...........U#",
-    "#U...........########.......##########..........U#",
+    "##...........#######.........########...........U#",
+    "#U..........#########.......##########..........U#",
     "#U.....######......###.....###......###.........U#",
     "#U..########........##..M..##........##..TT.....U#",
     "##..U...............##.....##........##.........U#",
@@ -41,7 +41,7 @@ export const CustomLevelLast = Object.freeze({
     "##..U#######.........................###........U#",
     "##........###...TT....................############",
     "##.........##...................#......###########",
-    "#U..U...M..##......######......###............####",
+    "#U......M..##......######......###............####",
     "#U..U#.....##.....########......###...........####",
     "#UT.U##.SS.##....U##....###......#...........#####",
     "#U..U######UU....##......##.................######",
@@ -54,13 +54,13 @@ export const CustomLevelLast = Object.freeze({
     "#U...TU#...........#U....###..............##..####",
     "#U....U#......TT...##....#####.........#####...###",
     "#U.....##..........##....U#####.......######....##",
-    "#U......##.......M.##....UUUUU##.....###...##....#",
-    "#UT......##........#U..........########.....##...#",
+    "#U......##.........##....UUUUU##.....###...##....#",
+    "#UT......##.......M#U..........########.....##...#",
     "#U........##########.............#####......###..#",
     "#U.........########.........................###..#",
     "##.....................TT...................###..#",
     "###......................................P...#...#",
-    "####..................SSSS...................G...#",
+    "####.........................................G...#",
     "##################################################",
     "##################################################",
     "##################################################"
@@ -73,22 +73,35 @@ export const CustomLevelLast = Object.freeze({
   "coinActions": {},
   "onKey": {},
   "triggers": [],
-  "textZones": [],
+  "textZones": [
+    {
+      "id": "textZone0",
+      "tx": 26,
+      "ty": 12,
+      "wTiles": 12,
+      "hTiles": 19,
+      "text": "НАЧИНАЕТСЯ УЖАС"
+    },
+    {
+      "id": "textZone1",
+      "tx": 9,
+      "ty": 22,
+      "wTiles": 10,
+      "hTiles": 10,
+      "text": "ЖАРААААААААААААААА"
+    },
+    {
+      "id": "textZone2",
+      "tx": 44,
+      "ty": 24,
+      "wTiles": 5,
+      "hTiles": 13,
+      "text": "Было бы глупо тут умереть, не так ли?"
+    }
+  ],
   "hazards": {
     "hiddenSpikes": [],
-    "saws": [
-      {
-        "id": "saw0",
-        "tx": 9,
-        "ty": 3,
-        "r": 16,
-        "axis": "y",
-        "spanTiles": 3,
-        "speed": 0.8,
-        "t": 0,
-        "active": true
-      }
-    ],
+    "saws": [],
     "rockets": [],
     "turrets": [
       {
@@ -97,7 +110,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 7,
         "active": true,
         "radiusTiles": 12,
-        "rocketSpeed": 3.50,
+        "rocketSpeed": 3.5,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -114,7 +127,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 19,
         "active": true,
         "radiusTiles": 12,
-        "rocketSpeed": 3.50,
+        "rocketSpeed": 3.5,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -131,7 +144,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 23,
         "active": true,
         "radiusTiles": 13,
-        "rocketSpeed": 3.50,
+        "rocketSpeed": 3.5,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -197,204 +210,78 @@ export const CustomLevelLast = Object.freeze({
     "wallMines": [
       {
         "id": "wallMine0",
-        "tx": 15,
-        "ty": 3,
-        "side": "floor",
-        "active": true
-      },
-      {
-        "id": "wallMine1",
         "tx": 16,
         "ty": 3,
         "side": "floor",
         "active": true
       },
       {
-        "id": "wallMine2",
-        "tx": 17,
-        "ty": 3,
-        "side": "floor",
-        "active": true
-      },
-      {
-        "id": "wallMine3",
-        "tx": 32,
-        "ty": 3,
-        "side": "floor",
-        "active": true
-      },
-      {
-        "id": "wallMine4",
+        "id": "wallMine1",
         "tx": 33,
         "ty": 3,
         "side": "floor",
         "active": true
       },
       {
+        "id": "wallMine2",
+        "tx": 29,
+        "ty": 8,
+        "side": "left",
+        "active": true
+      },
+      {
+        "id": "wallMine3",
+        "tx": 36,
+        "ty": 8,
+        "side": "right",
+        "active": true
+      },
+      {
+        "id": "wallMine4",
+        "tx": 29,
+        "ty": 9,
+        "side": "left",
+        "active": true
+      },
+      {
         "id": "wallMine5",
-        "tx": 34,
-        "ty": 3,
-        "side": "floor",
+        "tx": 36,
+        "ty": 9,
+        "side": "right",
         "active": true
       },
       {
         "id": "wallMine6",
         "tx": 29,
-        "ty": 8,
+        "ty": 10,
         "side": "left",
         "active": true
       },
       {
         "id": "wallMine7",
         "tx": 36,
-        "ty": 8,
+        "ty": 10,
         "side": "right",
         "active": true
       },
       {
         "id": "wallMine8",
-        "tx": 29,
-        "ty": 9,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine9",
-        "tx": 36,
-        "ty": 9,
-        "side": "right",
-        "active": true
-      },
-      {
-        "id": "wallMine10",
-        "tx": 29,
-        "ty": 10,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine11",
-        "tx": 36,
-        "ty": 10,
-        "side": "right",
-        "active": true
-      },
-      {
-        "id": "wallMine12",
-        "tx": 10,
-        "ty": 17,
-        "side": "right",
-        "active": true
-      },
-      {
-        "id": "wallMine13",
-        "tx": 10,
-        "ty": 18,
-        "side": "right",
-        "active": true
-      },
-      {
-        "id": "wallMine14",
-        "tx": 27,
-        "ty": 19,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine15",
-        "tx": 27,
-        "ty": 20,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine16",
-        "tx": 27,
-        "ty": 21,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine17",
-        "tx": 27,
-        "ty": 22,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine18",
-        "tx": 27,
-        "ty": 23,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine19",
-        "tx": 27,
-        "ty": 24,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine20",
-        "tx": 27,
-        "ty": 25,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine21",
         "tx": 45,
         "ty": 26,
         "side": "right",
         "active": true
       },
       {
-        "id": "wallMine22",
+        "id": "wallMine9",
         "tx": 45,
         "ty": 27,
         "side": "right",
         "active": true
       },
       {
-        "id": "wallMine23",
+        "id": "wallMine10",
         "tx": 47,
         "ty": 33,
-        "side": "left",
-        "active": true
-      },
-      {
-        "id": "wallMine24",
-        "tx": 11,
-        "ty": 34,
-        "side": "ceiling",
-        "active": true
-      },
-      {
-        "id": "wallMine25",
-        "tx": 12,
-        "ty": 34,
-        "side": "ceiling",
-        "active": true
-      },
-      {
-        "id": "wallMine26",
-        "tx": 17,
-        "ty": 34,
-        "side": "ceiling",
-        "active": true
-      },
-      {
-        "id": "wallMine27",
-        "tx": 18,
-        "ty": 34,
-        "side": "ceiling",
-        "active": true
-      },
-      {
-        "id": "wallMine28",
-        "tx": 47,
-        "ty": 34,
         "side": "left",
         "active": true
       }
@@ -451,7 +338,7 @@ export const CustomLevelLast = Object.freeze({
       },
       {
         "id": "slope1",
-        "tx": 13,
+        "tx": 12,
         "ty": 4,
         "rotation": 0,
         "sizeTiles": 1
@@ -479,170 +366,170 @@ export const CustomLevelLast = Object.freeze({
       },
       {
         "id": "slope5",
+        "tx": 11,
+        "ty": 5,
+        "rotation": 0,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope6",
         "tx": 21,
         "ty": 5,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope6",
+        "id": "slope7",
         "tx": 27,
         "ty": 5,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope7",
+        "id": "slope8",
         "tx": 38,
         "ty": 5,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope8",
+        "id": "slope9",
         "tx": 6,
         "ty": 6,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope9",
+        "id": "slope10",
         "tx": 13,
         "ty": 6,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope10",
+        "id": "slope11",
         "tx": 18,
         "ty": 6,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope11",
+        "id": "slope12",
         "tx": 30,
         "ty": 6,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope12",
+        "id": "slope13",
         "tx": 35,
         "ty": 6,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope13",
+        "id": "slope14",
         "tx": 12,
         "ty": 7,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope14",
+        "id": "slope15",
         "tx": 19,
         "ty": 7,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope15",
+        "id": "slope16",
         "tx": 29,
         "ty": 7,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope16",
+        "id": "slope17",
         "tx": 36,
         "ty": 7,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope17",
+        "id": "slope18",
         "tx": 20,
         "ty": 11,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope18",
+        "id": "slope19",
         "tx": 28,
         "ty": 11,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope19",
+        "id": "slope20",
         "tx": 11,
         "ty": 13,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope20",
+        "id": "slope21",
         "tx": 39,
         "ty": 13,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope21",
+        "id": "slope22",
         "tx": 12,
         "ty": 14,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope22",
+        "id": "slope23",
         "tx": 9,
         "ty": 15,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope23",
+        "id": "slope24",
         "tx": 37,
         "ty": 15,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope24",
+        "id": "slope25",
         "tx": 10,
         "ty": 16,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope25",
+        "id": "slope26",
         "tx": 31,
         "ty": 16,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope26",
+        "id": "slope27",
         "tx": 33,
         "ty": 16,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope27",
+        "id": "slope28",
         "tx": 38,
         "ty": 16,
         "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope28",
-        "tx": 5,
-        "ty": 17,
-        "rotation": 90,
         "sizeTiles": 1
       },
       {
@@ -1115,19 +1002,6 @@ export const CustomLevelLast = Object.freeze({
         "sizeTiles": 1
       }
     ],
-    "bombs": [
-      {
-        "id": "bomb0",
-        "tx": 14,
-        "ty": 36,
-        "active": true
-      },
-      {
-        "id": "bomb1",
-        "tx": 15,
-        "ty": 36,
-        "active": true
-      }
-    ]
+    "bombs": []
   }
 });

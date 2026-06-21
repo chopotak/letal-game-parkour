@@ -10,6 +10,7 @@ export const Level3 = Object.freeze({
     "verticalLevel": 6,
     "wallJumpLevel": 5
   },
+  "difficulty": 3,
   "physicsMode": "moon",
   "physicsOverrides": {
     "moon": {
@@ -33,7 +34,7 @@ export const Level3 = Object.freeze({
     "#........###.....###.....##.....####...#",
     "#....###.###.###.....###.##.###.####...#",
     "#....###.###.###.....###.##.###.####.#.#",
-    "#.M..###.###.###..M..###.##.###.####.#.#",
+    "#.M..###.###.###.....###.##.###.####.#.#",
     "#........................##.....####.#.#",
     "########.###.###.###.###.##.###.####.#.#",
     "########.###.###.###.###.##.###.####...#",
@@ -50,14 +51,39 @@ export const Level3 = Object.freeze({
     "########################################"
   ],
   "messages": [
-    "Чтобы отцепиться от стенки, нажмите S"
+    "Пользовательский уровень. Проверяй свои ловушки честно."
   ],
   "labels": [],
   "buttonActions": {},
   "coinActions": {},
   "onKey": {},
   "triggers": [],
-  "textZones": [],
+  "textZones": [
+    {
+      "id": "textZone0",
+      "tx": 18,
+      "ty": 3,
+      "wTiles": 9,
+      "hTiles": 3,
+      "text": "Ого, последнее испытание, смотри не умри тут XD"
+    },
+    {
+      "id": "textZone1",
+      "tx": 12,
+      "ty": 7,
+      "wTiles": 12,
+      "hTiles": 11,
+      "text": "Жаркое место!"
+    },
+    {
+      "id": "textZone2",
+      "tx": 8,
+      "ty": 19,
+      "wTiles": 23,
+      "hTiles": 3,
+      "text": "Чтобы отцепиться от стен, нажмите S"
+    }
+  ],
   "hazards": {
     "hiddenSpikes": [],
     "saws": [],
@@ -95,15 +121,6 @@ export const Level3 = Object.freeze({
       },
       {
         "id": "flier2",
-        "tx": 12,
-        "ty": 7,
-        "direction": "right",
-        "speed": 0.5,
-        "areaWidthTiles": 5,
-        "areaHeightTiles": 5
-      },
-      {
-        "id": "flier3",
         "tx": 20,
         "ty": 7,
         "direction": "right",
@@ -112,7 +129,7 @@ export const Level3 = Object.freeze({
         "areaHeightTiles": 5
       },
       {
-        "id": "flier4",
+        "id": "flier3",
         "tx": 36,
         "ty": 8,
         "direction": "right",
@@ -121,7 +138,7 @@ export const Level3 = Object.freeze({
         "areaHeightTiles": 8
       },
       {
-        "id": "flier5",
+        "id": "flier4",
         "tx": 8,
         "ty": 11,
         "direction": "right",
@@ -130,7 +147,7 @@ export const Level3 = Object.freeze({
         "areaHeightTiles": 5
       },
       {
-        "id": "flier6",
+        "id": "flier5",
         "tx": 27,
         "ty": 11,
         "direction": "right",
@@ -139,6 +156,7 @@ export const Level3 = Object.freeze({
         "areaHeightTiles": 5
       }
     ],
+    "mazeBots": [],
     "mines": [],
     "wallMines": [],
     "lasers": [
@@ -165,6 +183,5 @@ export const Level3 = Object.freeze({
     ],
     "slopes": [],
     "bombs": []
-  },
-  "difficulty": 3
+  }
 });

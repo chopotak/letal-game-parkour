@@ -1385,8 +1385,8 @@ export class LevelEditor {
 
   importTextZones(textZones) {
     textZones.forEach((zone) => {
-      const tx = Math.min(this.width - 2, Math.max(1, zone.tx + Math.floor((zone.wTiles ?? 3) / 2)));
-      const ty = Math.min(this.height - 4, Math.max(1, zone.ty + Math.floor((zone.hTiles ?? 3) / 2)));
+      const tx = Math.min(this.width - 2, Math.max(1, Number(zone.tx ?? 1)));
+      const ty = Math.min(this.height - 4, Math.max(1, Number(zone.ty ?? 1)));
       this.placeImportedMeta(tx, ty, "V", {
         type: "textZone",
         wTiles: zone.wTiles ?? 3,
@@ -1631,8 +1631,8 @@ export class LevelEditor {
         if (tile === "V") {
           textZones.push({
             id: `textZone${textZones.length}`,
-            tx: Math.max(1, x - Math.floor((meta.wTiles ?? 3) / 2)),
-            ty: Math.max(1, y - Math.floor((meta.hTiles ?? 3) / 2)),
+            tx: x,
+            ty: y,
             wTiles: Math.max(1, Number(meta.wTiles ?? 3)),
             hTiles: Math.max(1, Number(meta.hTiles ?? 3)),
             text: String(meta.text ?? ""),
@@ -2583,14 +2583,16 @@ export class LevelEditor {
       if (meta.type === "textZone") {
         const w = Number(meta.wTiles ?? 3) * tileSize;
         const h = Number(meta.hTiles ?? 3) * tileSize;
+        const zoneX = x;
+        const zoneY = y;
         this.ctx.globalAlpha = 0.16;
         this.ctx.fillStyle = "#52eadc";
-        this.ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
+        this.ctx.fillRect(zoneX, zoneY, w, h);
         this.ctx.globalAlpha = 0.82;
         this.ctx.strokeStyle = "#52eadc";
         this.ctx.setLineDash([6, 5]);
         this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(cx - w / 2, cy - h / 2, w, h);
+        this.ctx.strokeRect(zoneX, zoneY, w, h);
       }
       this.ctx.restore();
     });
