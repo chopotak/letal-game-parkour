@@ -43,8 +43,8 @@ export const CustomLevelLast = Object.freeze({
     "##.........##...................#......###########",
     "#U..#...M..##......######......###............####",
     "#UT.##.....##.....########......###...........####",
-    "#U...##.SS.##....U##....###......#...........#####",
-    "#U...######UU....##......##.................######",
+    "#U..###.SS.##....U##....###......#...........#####",
+    "#U..#######UU....##......##.................######",
     "#U....####UU.....##......U#.TT.............#######",
     "#U....U#.........##....M.U#...............###....#",
     "#UT...U#.........U#......U#...............##.....#",
@@ -97,7 +97,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 7,
         "active": true,
         "radiusTiles": 12,
-        "rocketSpeed": 0.71,
+        "rocketSpeed": 0.32,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -114,7 +114,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 19,
         "active": true,
         "radiusTiles": 12,
-        "rocketSpeed": 0.71,
+        "rocketSpeed": 0.32,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -131,7 +131,7 @@ export const CustomLevelLast = Object.freeze({
         "ty": 23,
         "active": true,
         "radiusTiles": 13,
-        "rocketSpeed": 0.71,
+        "rocketSpeed": 0.32,
         "cooldownFrames": 500,
         "aggression": 1,
         "reactionFrames": 58,
@@ -710,412 +710,405 @@ export const CustomLevelLast = Object.freeze({
       },
       {
         "id": "slope38",
-        "tx": 4,
-        "ty": 19,
-        "rotation": 270,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope39",
         "tx": 7,
         "ty": 19,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope40",
+        "id": "slope39",
         "tx": 10,
         "ty": 19,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope41",
+        "id": "slope40",
         "tx": 20,
         "ty": 19,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope42",
+        "id": "slope41",
         "tx": 23,
         "ty": 19,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope43",
+        "id": "slope42",
         "tx": 32,
         "ty": 19,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope44",
+        "id": "slope43",
         "tx": 34,
         "ty": 19,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope45",
+        "id": "slope44",
         "tx": 44,
         "ty": 19,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope46",
+        "id": "slope45",
         "tx": 19,
         "ty": 20,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope47",
+        "id": "slope46",
         "tx": 24,
         "ty": 20,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope48",
+        "id": "slope47",
         "tx": 43,
         "ty": 20,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope49",
+        "id": "slope48",
         "tx": 5,
         "ty": 21,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope50",
+        "id": "slope49",
         "tx": 42,
         "ty": 21,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope51",
+        "id": "slope50",
         "tx": 8,
+        "ty": 22,
+        "rotation": 180,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope51",
+        "tx": 45,
         "ty": 22,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
         "id": "slope52",
-        "tx": 45,
-        "ty": 22,
-        "rotation": 180,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope53",
         "tx": 44,
         "ty": 23,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope54",
+        "id": "slope53",
         "tx": 35,
         "ty": 24,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope55",
+        "id": "slope54",
         "tx": 37,
         "ty": 24,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope56",
+        "id": "slope55",
         "tx": 19,
         "ty": 25,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope57",
+        "id": "slope56",
         "tx": 46,
         "ty": 25,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope58",
+        "id": "slope57",
         "tx": 17,
         "ty": 26,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope59",
+        "id": "slope58",
         "tx": 20,
         "ty": 26,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope60",
+        "id": "slope59",
         "tx": 27,
         "ty": 26,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope61",
+        "id": "slope60",
         "tx": 35,
         "ty": 26,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope62",
+        "id": "slope61",
         "tx": 37,
         "ty": 26,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope63",
+        "id": "slope62",
         "tx": 18,
         "ty": 27,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope64",
+        "id": "slope63",
         "tx": 28,
         "ty": 27,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope65",
+        "id": "slope64",
         "tx": 8,
+        "ty": 28,
+        "rotation": 90,
+        "sizeTiles": 1
+      },
+      {
+        "id": "slope65",
+        "tx": 30,
         "ty": 28,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
         "id": "slope66",
-        "tx": 30,
-        "ty": 28,
-        "rotation": 90,
-        "sizeTiles": 1
-      },
-      {
-        "id": "slope67",
         "tx": 38,
         "ty": 28,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope68",
+        "id": "slope67",
         "tx": 46,
         "ty": 28,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope69",
+        "id": "slope68",
         "tx": 6,
         "ty": 29,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope70",
+        "id": "slope69",
         "tx": 9,
         "ty": 29,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope71",
+        "id": "slope70",
         "tx": 31,
         "ty": 29,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope72",
+        "id": "slope71",
         "tx": 37,
         "ty": 29,
         "rotation": 0,
         "sizeTiles": 1
       },
       {
-        "id": "slope73",
+        "id": "slope72",
         "tx": 44,
         "ty": 29,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope74",
+        "id": "slope73",
         "tx": 47,
         "ty": 29,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope75",
+        "id": "slope74",
         "tx": 7,
         "ty": 30,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope76",
+        "id": "slope75",
         "tx": 10,
         "ty": 30,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope77",
+        "id": "slope76",
         "tx": 40,
         "ty": 30,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope78",
+        "id": "slope77",
         "tx": 42,
         "ty": 30,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope79",
+        "id": "slope78",
         "tx": 45,
         "ty": 30,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope80",
+        "id": "slope79",
         "tx": 48,
         "ty": 30,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope81",
+        "id": "slope80",
         "tx": 8,
         "ty": 31,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope82",
+        "id": "slope81",
         "tx": 30,
         "ty": 31,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope83",
+        "id": "slope82",
         "tx": 39,
         "ty": 31,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope84",
+        "id": "slope83",
         "tx": 43,
         "ty": 31,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope85",
+        "id": "slope84",
         "tx": 46,
         "ty": 31,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope86",
+        "id": "slope85",
         "tx": 9,
         "ty": 32,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope87",
+        "id": "slope86",
         "tx": 20,
         "ty": 32,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope88",
+        "id": "slope87",
         "tx": 32,
         "ty": 32,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope89",
+        "id": "slope88",
         "tx": 38,
         "ty": 32,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope90",
+        "id": "slope89",
         "tx": 10,
         "ty": 33,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope91",
+        "id": "slope90",
         "tx": 19,
         "ty": 33,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope92",
+        "id": "slope91",
         "tx": 2,
         "ty": 34,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope93",
+        "id": "slope92",
         "tx": 3,
         "ty": 35,
         "rotation": 90,
         "sizeTiles": 1
       },
       {
-        "id": "slope94",
+        "id": "slope93",
         "tx": 44,
         "ty": 35,
         "rotation": 270,
         "sizeTiles": 1
       },
       {
-        "id": "slope95",
+        "id": "slope94",
         "tx": 46,
         "ty": 35,
         "rotation": 180,
         "sizeTiles": 1
       },
       {
-        "id": "slope96",
+        "id": "slope95",
         "tx": 4,
         "ty": 36,
         "rotation": 90,

@@ -11,8 +11,9 @@ export class PhysicsWorld {
     this.mode = mode;
   }
 
-  moveActor(actor, level, input, consumeJumpPressed, onJump, onWallSlide) {
+  moveActor(actor, level, input, consumeJumpPressed, onJump, onWallSlide, options = {}) {
     const physics = this.physicsForLevel(level);
+    const dtMs = options.dtMs ?? 1000 / 60;
     actor.prevX = actor.x;
     actor.prevY = actor.y;
     actor.touchingWall = 0;
@@ -20,7 +21,7 @@ export class PhysicsWorld {
     if (actor.ignoreSlopeSolidFrames > 0) actor.ignoreSlopeSolidFrames -= 1;
     if (actor.dropThroughSlopeFrames > 0) actor.dropThroughSlopeFrames -= 1;
     if (actor.dropThroughSpringFrames > 0) actor.dropThroughSpringFrames -= 1;
-    if (actor.wallLatchLockTimer > 0) actor.wallLatchLockTimer -= 1;
+    if (actor.wallLatchLockTimer > 0) actor.wallLatchLockTimer = Math.max(0, actor.wallLatchLockTimer - dtMs);
 
     if (actor.wallJumpLockTimer > 0) {
       actor.wallJumpLockTimer -= 1;
@@ -231,7 +232,14 @@ export class PhysicsWorld {
       actor.wallSliding = false;
       return;
     }
+    const holdingToward = (side === -1 && input.left) || (side === 1 && input.right);
     const pressingAway = (side === -1 && input.right) || (side === 1 && input.left);
+    if (!holdingToward && actor.wallLatchLockTimer <= 0) {
+      actor.wallContactFrames = 0;
+      actor.wallContactSide = 0;
+      actor.wallSliding = false;
+      return;
+    }
     if (pressingAway && actor.wallContactFrames > gripFrames && actor.wallLatchLockTimer <= 0) {
       actor.wallContactFrames = 0;
       actor.wallContactSide = 0;
@@ -241,7 +249,7 @@ export class PhysicsWorld {
     if (actor.wallContactSide !== side) {
       actor.wallContactSide = side;
       actor.wallContactFrames = 0;
-      actor.wallLatchLockTimer = physics.wallLatchControlLockFrames ?? 30;
+      actor.wallLatchLockTimer = physics.wallLatchControlLockMs ?? ((physics.wallLatchControlLockFrames ?? 30) * 1000 / 60);
       if (physics.lockWallOnLatch && actor.wallJumpLockSide === 0) actor.wallJumpLockSide = side;
     }
     actor.wallContactFrames += 1;

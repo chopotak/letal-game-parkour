@@ -26,7 +26,7 @@ export const GameConfig = Object.freeze({
     wallGripFrames: 90,
     wallGripFallSpeed: 0.22,
     wallSlideSpeed: 1.65,
-    wallLatchControlLockFrames: 30,
+    wallLatchControlLockMs: 500,
   },
   physicsProfiles: {
     classic: {
@@ -57,7 +57,7 @@ export const GameConfig = Object.freeze({
       wallGripFallSpeed: 0.22,
       wallSlideSpeed: 1.65,
       wallFriction: 0,
-      wallLatchControlLockFrames: 30,
+      wallLatchControlLockMs: 500,
     },
     nplus: {
       label: "N+ мод",
@@ -91,7 +91,7 @@ export const GameConfig = Object.freeze({
       wallGripFallSpeed: 0.14,
       wallSlideSpeed: 1.65,
       wallFriction: 0.38,
-      wallLatchControlLockFrames: 30,
+      wallLatchControlLockMs: 500,
     },
     moon: {
       label: "Лунный мод",
@@ -125,7 +125,7 @@ export const GameConfig = Object.freeze({
       wallGripFallSpeed: 0.055,
       wallSlideSpeed: 0.65,
       wallFriction: 0.5,
-      wallLatchControlLockFrames: 30,
+      wallLatchControlLockMs: 500,
     },
   },
   player: {

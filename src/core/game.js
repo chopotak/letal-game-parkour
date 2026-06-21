@@ -135,10 +135,12 @@ export class Game {
   loop(now) {
     this.frameRequest = null;
     if (document.hidden) return;
+    const dtMs = Math.min(50, Math.max(0, now - this.last));
+    this.last = now;
     const frameStart = this.performanceMonitor.beginFrame(now);
     if (this.state === "playing") this.ui.setTimer(this.startedAt, now);
 
-    if (this.state === "playing" && this.level && this.player) this.update(now);
+    if (this.state === "playing" && this.level && this.player) this.update(now, dtMs);
     const renderStart = this.performanceMonitor.markUpdate(frameStart, 1);
     const shouldRender = now - this.lastRenderNow >= 1000 / this.fpsCap - 0.5;
     if (!shouldRender) {
@@ -165,7 +167,7 @@ export class Game {
     this.scheduleFrame();
   }
 
-  update(now) {
+  update(now, dtMs = 16.67) {
     if (this.freeze > 0) {
       this.freeze -= 1;
       this.effects.update();
@@ -192,6 +194,7 @@ export class Game {
           "#7b8ea7",
           3,
         ),
+        { dtMs },
       );
       this.updateTriggers();
       this.updateSpringPads();
